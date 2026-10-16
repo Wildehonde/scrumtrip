@@ -1,0 +1,14 @@
+---
+import { identity, display } from '../data/identity.js';
+import { cities } from '../data/tournament.js';
+const { team, cityNames } = Astro.props; const id = identity[team]; const name = display(team);
+---
+<section class="fan" style={`--acc:${id.accent}`}>
+<h2>For {name} fans</h2>
+<p>{id.nick ? <>Following the <b>{id.nick}</b>{id.meaning?` (${id.meaning})`:''}</> : <>Following <b>{team}</b></>} to Australia? Your pool games are in {cityNames}. Pack your {id.colours.toLowerCase()} and plan the route below.</p>
+<ul>
+{id.alt && <li>Also known as: {id.alt}</li>}
+{id.tradition && <li>Pre-match: {id.tradition}. Get to your seat early.</li>}
+{id.song && <li>In the stands: {id.song}.</li>}
+<li class="muted">Team colours: {id.colours}. Source: <a href={id.src} rel="noopener" target="_blank">Wikipedia</a>{id.src2 && <> · <a href={id.src2} rel="noopener" target="_blank">official</a></>}</li>
+</ul></section>

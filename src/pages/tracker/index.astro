@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import data from '../../data/prices/example.json';
+const names={JNB:'Johannesburg',PER:'Perth',SYD:'Sydney',LHR:'London',DUB:'Dublin',AKL:'Auckland',EZE:'Buenos Aires',BNE:'Brisbane'};
+const W=600,H=180,P=28;
+const charts=Object.entries(data.routes).map(([k,pts])=>{const ps=pts.map(p=>p.price);const mn=Math.min(...ps),mx=Math.max(...ps);
+ const x=i=>P+i*(W-2*P)/(pts.length-1), y=v=>H-P-(v-mn)/((mx-mn)||1)*(H-2*P);
+ const [o,d]=k.split('-');return {k,label:`${names[o]} → ${names[d]}`,path:pts.map((p,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${y(p.price).toFixed(1)}`).join(' '),mn,mx,last:ps.at(-1),first:ps[0],x,y,pts};});
+---
+<Base title="Flight price tracker (preview)" description="Track flight prices to Rugby World Cup 2027 host cities.">
+<h1>Flight price tracker</h1>
+{data.isExample && <div class="example-banner"><b>EXAMPLE DATA, NOT REAL PRICES.</b> These charts use made-up numbers to preview the design. Live fares will appear once the tracker is connected.</div>}
+<p class="muted">Cheapest one-way fare found each day for September 2027 departures, in {data.currency.toUpperCase()}.</p>
+<div class="charts">{charts.map(c=>(
+<figure class="chart"><figcaption><b>{c.label}</b><span class={c.last<=c.first?'down':'up'}>{data.isExample?'example ':''}${c.last} {c.last<=c.first?'▼':'▲'}</span></figcaption>
+<svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${c.label} example price chart`}>
+{data.isExample && <text x={W/2} y={H/2} text-anchor="middle" class="wm">EXAMPLE</text>}
+<line x1={P} x2={W-P} y1={H-P} y2={H-P} class="axis"/>
+<path d={c.path} class="line"/>
+<text x={P} y={H-8} class="lbl">{c.pts[0].date}</text><text x={W-P} y={H-8} text-anchor="end" class="lbl">{c.pts.at(-1).date}</text>
+<text x={P} y={14} class="lbl">high ${c.mx} · low ${c.mn}</text></svg>
+<a class="btn small" href={`#affiliate-flights-${c.k}`} rel="sponsored nofollow">Check live fares (affiliate placeholder)</a></figure>))}</div>
+</Base>

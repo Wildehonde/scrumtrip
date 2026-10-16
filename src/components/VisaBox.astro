@@ -1,0 +1,11 @@
+---
+import { visas, byTeam, LAST_CHECKED } from '../data/visa.js';
+const { team } = Astro.props; const v = byTeam[team];
+---
+<section class="visa" id="visa"><h2>🛂 Visa for {team} passport holders</h2>
+<p class="note"><b>Not legal advice.</b> Rules change. Always check the official Department of Home Affairs site before applying. Last checked: {LAST_CHECKED}.</p>
+{v.note && <p>{v.note}</p>}
+{v.options.length>0 && <p>Typically eligible for: <b>{v.options.map(o=>visas[o].code).join(' or ')}</b>.</p>}
+{v.options.map(o=>{const x=visas[o];return <div class="visacard"><h3>{x.code}</h3><ul><li><b>Cost:</b> {x.cost}</li><li><b>How to apply:</b> {x.apply}</li><li><b>Processing:</b> {x.processing}</li><li><b>Stay:</b> {x.stay}</li></ul><a href={x.url} rel="nofollow noopener">Official page ↗</a></div>})}
+{v.concession && <p class="muted">From 1 July 2026, a lower Visitor visa cost applies to eligible Pacific Island citizens (including {team}).</p>}
+<p><a href="/visa/">Full step-by-step visa checklist →</a></p></section>

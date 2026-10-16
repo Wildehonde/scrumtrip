@@ -1,0 +1,52 @@
+2027-10-01|A|Australia v Hong Kong China|perth|18:45
+2027-10-02|A|New Zealand v Chile|perth|13:15
+2027-10-09|A|New Zealand v Australia|stadium-australia|17:10
+2027-10-09|A|Chile v Hong Kong China|townsville|20:15
+2027-10-15|A|New Zealand v Hong Kong China|docklands|17:15
+2027-10-16|A|Australia v Chile|brisbane|15:10
+2027-10-03|B|South Africa v Italy|adelaide|14:15
+2027-10-03|B|Georgia v Romania|townsville|20:15
+2027-10-10|B|South Africa v Georgia|brisbane|16:45
+2027-10-11|B|Italy v Romania|sfs|19:45
+2027-10-17|B|Italy v Georgia|newcastle|12:15
+2027-10-17|B|South Africa v Romania|perth|19:15
+2027-10-04|C|Fiji v Spain|newcastle|14:15
+2027-10-04|C|Argentina v Canada|brisbane|18:45
+2027-10-10|C|Fiji v Canada|adelaide|12:15
+2027-10-10|C|Argentina v Spain|docklands|15:15
+2027-10-16|C|Argentina v Fiji|adelaide|13:15
+2027-10-16|C|Spain v Canada|townsville|20:15
+2027-10-03|D|Scotland v Uruguay|docklands|17:15
+2027-10-04|D|Ireland v Portugal|sfs|17:15
+2027-10-10|D|Ireland v Scotland|perth|17:45
+2027-10-11|D|Uruguay v Portugal|newcastle|17:15
+2027-10-17|D|Ireland v Uruguay|docklands|14:45
+2027-10-17|D|Scotland v Portugal|brisbane|16:15
+2027-10-02|E|France v USA|docklands|17:45
+2027-10-03|E|Japan v Samoa|newcastle|12:15
+2027-10-09|E|USA v Samoa|perth|12:15
+2027-10-09|E|France v Japan|brisbane|18:45
+2027-10-15|E|Japan v USA|adelaide|20:00
+2027-10-17|E|France v Samoa|sfs|19:45
+2027-10-02|F|Wales v Zimbabwe|adelaide|12:15
+2027-10-02|F|England v Tonga|brisbane|20:15
+2027-10-08|F|Wales v Tonga|docklands|18:15
+2027-10-08|F|England v Zimbabwe|adelaide|20:15
+2027-10-15|F|Tonga v Zimbabwe|townsville|20:15
+2027-10-16|F|England v Wales|stadium-australia|19:45
+2027-10-23|R16|R16 (1): 2nd Pool C v 2nd Pool F|sfs|14:15
+2027-10-23|R16|R16 (2): 1st Pool A v 3rd Pool C/E/F|brisbane|15:45
+2027-10-23|R16|R16 (3): 1st Pool E v 2nd Pool D|docklands|19:15
+2027-10-23|R16|R16 (4): 1st Pool B v 3rd Pool D/E/F|perth|18:45
+2027-10-24|R16|R16 (5): 1st Pool C v 3rd Pool A/E/F|sfs|14:15
+2027-10-24|R16|R16 (6): 1st Pool D v 3rd Pool B/E/F|docklands|16:45
+2027-10-24|R16|R16 (7): 2nd Pool A v 2nd Pool E|brisbane|18:15
+2027-10-24|R16|R16 (8): 1st Pool F v 2nd Pool B|perth|18:45
+2027-10-30|QF|QF1: W R16 (2) v W R16 (4)|stadium-australia|16:45
+2027-10-30|QF|QF2: W R16 (1) v W R16 (3)|brisbane|18:45
+2027-10-31|QF|QF3: W R16 (5) v W R16 (6)|brisbane|16:00
+2027-10-31|QF|QF4: W R16 (7) v W R16 (8)|stadium-australia|20:00
+2027-11-05|SF|SF1: W QF1 v W QF2|stadium-australia|20:00
+2027-11-06|SF|SF2: W QF3 v W QF4|stadium-australia|20:00
+2027-11-12|Bronze|Bronze Final: Runner-up SF1 v Runner-up SF2|stadium-australia|19:45
+2027-11-13|Final|Final: Winner SF1 v Winner SF2|stadium-australia|20:00

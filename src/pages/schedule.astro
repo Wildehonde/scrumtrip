@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import { matches, teams, cities } from '../data/tournament.js';
+import MatchList from '../components/MatchList.astro';
+import { eventSchema } from '../lib/schema.js';
+---
+<Base schema={eventSchema(matches)} title="Full match schedule" description="All 52 Rugby World Cup 2027 matches with dates, local kick-off times, venues and calendar downloads.">
+<h1>All 52 matches</h1><p>Kick-off times are local. <a class="btn small" href="/ics/all.ics">Download full calendar (.ics)</a></p>
+<div class="filters">
+<select data-filter="team" aria-label="Team"><option value="">All teams</option>{teams.map(t=><option value={t.slug}>{t.name}</option>)}</select>
+<select data-filter="city" aria-label="City"><option value="">All cities</option>{Object.entries(cities).map(([k,c])=><option value={k}>{c.name}</option>)}</select>
+<select data-filter="stage" aria-label="Stage"><option value="">All stages</option>{['Pool','R16','QF','SF','Bronze','Final'].map(s=><option value={s}>{s}</option>)}</select>
+</div>
+<MatchList list={matches}/>
+</Base>

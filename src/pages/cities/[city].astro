@@ -1,0 +1,24 @@
+---
+import Base from '../../layouts/Base.astro';
+import MatchList from '../../components/MatchList.astro';
+import Deals from '../../components/Deals.astro';
+import { eventSchema } from '../../lib/schema.js';
+import { cities, matches, venues } from '../../data/tournament.js';
+import { guides } from '../../data/guides.js';
+export function getStaticPaths(){ return Object.keys(cities).map(c=>({params:{city:c}})); }
+const { city } = Astro.params; const c = cities[city]; const g = guides[city];
+const list = matches.filter(m=>m.city===city);
+const vs = Object.values(venues).filter(v=>v.city===city).map(v=>v.name);
+---
+<Base schema={eventSchema(list)} title={`${c.name} RWC 2027 guide: stadium, transport, where to stay`} description={`Fan guide to ${c.name} for Rugby World Cup 2027: ${vs.join(' & ')}, getting there, where to stay and ${list.length} matches.`}>
+<p class="kicker">{c.state} · {vs.join(' & ')}</p><h1>{c.name} fan guide</h1><p>{c.blurb}</p>
+<p class="note">ScrumTrip guidance, not official information. Check transport and venue details with official sources before you travel.</p>
+<div class="guide">
+<section><h3>🏟 The stadium</h3><p>{g.stadium}</p></section>
+<section><h3>🚆 Getting there</h3><p class="muted">Fly into {g.airport}.</p><ul>{g.getting.map(x=><li>{x}</li>)}</ul></section>
+<section><h3>🛏 Where to stay</h3><ul>{g.stay.map(x=><li>{x}</li>)}</ul></section>
+<section><h3>💡 Fan tips</h3><ul>{g.tips.map(x=><li>{x}</li>)}</ul></section>
+</div>
+<h2>Book your trip</h2><Deals city={c.name}/>
+<h2>{list.length} matches in {c.name}</h2><MatchList list={list}/>
+</Base>

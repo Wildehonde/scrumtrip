@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro';
+import { cities, matches } from '../../data/tournament.js';
+---
+<Base title="Host cities"><h1>7 host cities</h1><div class="cards">{Object.entries(cities).map(([k,c])=>(<a class="card" href={`/cities/${k}/`}><b>{c.name}</b><span>{matches.filter(m=>m.city===k).length} matches</span></a>))}</div></Base>

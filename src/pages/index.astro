@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+import { pools, cities, matches, slug } from '../data/tournament.js';
+import MatchList from '../components/MatchList.astro';
+---
+<Base title="Rugby World Cup 2027 trip planner">
+<section class="hero"><p class="kicker">Australia · 1 Oct – 13 Nov 2027</p><h1>Follow your team across Australia.</h1>
+<p>All 52 matches, 7 host cities, and the cheapest way to get there, for fans of all 24 nations.</p>
+<div class="cta"><a class="btn" href="/schedule/">See the schedule</a><a class="btn ghost" href="/plan/">Plan your trip</a></div></section>
+<div class="cta-band"><div><b>Going with mates?</b><br/><span class="muted">Build a day-by-day plan and share it on WhatsApp.</span></div><a class="btn" href="/plan/">Plan your trip</a></div>
+<h2>Pick your nation</h2>
+<div class="pools">{Object.entries(pools).map(([p,ts])=>(<div class="pool"><h3>Pool {p}</h3>{ts.map(t=><a href={`/nations/${slug(t)}/`}>{t}</a>)}</div>))}</div>
+<h2>Host cities</h2>
+<div class="cards">{Object.entries(cities).map(([k,c])=>(<a class="card" href={`/cities/${k}/`}><b>{c.name}</b><span>{matches.filter(m=>m.city===k).length} matches</span></a>))}</div>
+<h2>Opening weekend</h2><MatchList list={matches.slice(0,6)}/>
+</Base>

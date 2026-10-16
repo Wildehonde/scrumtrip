@@ -1,0 +1,20 @@
+---
+const { schema, title, description = 'Plan your Rugby World Cup 2027 trip to Australia: fixtures, host cities, flights and hotels for fans of every nation.' } = Astro.props;
+---
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>{title} | ScrumTrip</title><meta name="description" content={description}/>
+<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)}/>
+<meta property="og:title" content={`${title} | ScrumTrip`}/><meta property="og:description" content={description}/><meta property="og:type" content="website"/><meta property="og:url" content={new URL(Astro.url.pathname, Astro.site)}/><meta property="og:image" content="https://scrumtrip.com/og.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:image" content="https://scrumtrip.com/og.png"/>
+<script type="application/ld+json" set:html={JSON.stringify({"@context":"https://schema.org","@type":"WebSite",name:"ScrumTrip",url:"https://scrumtrip.com/"})}/>
+{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)}/>}
+<link rel="stylesheet" href="/style.css"/></head>
+<body><header class="top"><div class="wrap nav"><a class="logo" href="/">Scrum<span>Trip</span></a>
+<nav><a href="/plan/">Plan</a><a href="/schedule/">Schedule</a><a href="/nations/">Nations</a><a href="/cities/">Cities</a><a href="/tracker/">Flight tracker</a><a href="/visa/">Visas</a><a href="/tickets/">Tickets</a><a href="/#newsletter">Newsletter</a></nav></div></header>
+<main class="wrap"><slot/></main>
+<section id="newsletter" class="news"><div class="wrap"><h2>Get price-drop alerts</h2><p>Weekly flight and hotel price moves for your team's matches. Free.</p>
+<form onsubmit="event.preventDefault();this.querySelector('p').hidden=false"><input type="email" required placeholder="you@example.com" aria-label="Email"/><button>Subscribe</button><p hidden>Thanks! (Newsletter launching soon. Placeholder, nothing was sent.)</p></form></div></section>
+<footer class="foot"><div class="wrap"><p><strong>Not affiliated with World Rugby or Rugby World Cup 2027.</strong> Schedule from the official published match schedule; always confirm with official sources. Some links are affiliate links.</p><p>© 2026 ScrumTrip</p></div></footer>
+<script>
+document.querySelectorAll('[data-filter]').forEach(f=>f.addEventListener('change',()=>{const v={};document.querySelectorAll('[data-filter]').forEach(s=>v[s.dataset.filter]=s.value);
+document.querySelectorAll('.match').forEach(r=>{const ok=Object.entries(v).every(([k,x])=>!x||(r.dataset[k]||'').split(',').includes(x));r.hidden=!ok;});}));
+</script></body></html>

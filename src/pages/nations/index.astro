@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro';
+import { pools, slug } from '../../data/tournament.js';
+---
+<Base title="Nations"><h1>24 nations</h1><div class="pools">{Object.entries(pools).map(([p,ts])=>(<div class="pool"><h3>Pool {p}</h3>{ts.map(t=><a href={`/nations/${slug(t)}/`}>{t}</a>)}</div>))}</div></Base>

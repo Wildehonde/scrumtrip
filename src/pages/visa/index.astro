@@ -1,0 +1,16 @@
+---
+import Base from '../../layouts/Base.astro';
+import { visas, byTeam, checklist, LAST_CHECKED } from '../../data/visa.js';
+import { slug } from '../../data/tournament.js';
+const label = t => byTeam[t].options.length ? byTeam[t].options.map(o=>visas[o].code.split(' (')[0]).join(' / ') : (t==='Australia'?'No visa needed':'See official NZ page');
+---
+<Base title="Australia visa checklist for RWC 2027 fans" description="Which Australian visa fans of each RWC 2027 nation typically need (ETA 601, eVisitor 651, Visitor 600), costs, how to apply and a step-by-step checklist.">
+<h1>Australia visa checklist</h1>
+<p class="note"><b>Check the official site; this is not legal advice.</b> Based on the Department of Home Affairs (immi.homeaffairs.gov.au). Eligibility depends on your passport, not your team. Last checked: {LAST_CHECKED}.</p>
+<h2>The three common options</h2>
+<div class="guide">{Object.values(visas).map(x=><section><h3>{x.code}</h3><ul><li><b>Cost:</b> {x.cost}</li><li><b>Apply:</b> {x.apply}</li><li><b>Processing:</b> {x.processing}</li><li><b>Stay:</b> {x.stay}</li></ul><a href={x.url} rel="nofollow noopener">Official page ↗</a></section>)}</div>
+<h2>By nation (passport holders)</h2>
+<table class="vt"><thead><tr><th>Nation</th><th>Typical option(s)</th></tr></thead><tbody>
+{Object.keys(byTeam).map(t=><tr><td><a href={`/nations/${slug(t)}/#visa`}>{t}</a></td><td>{label(t)}{byTeam[t].concession?' (Pacific cost concession)':''}</td></tr>)}</tbody></table>
+<h2>Step-by-step checklist</h2><ol class="steps">{checklist.map(([h,d])=><li><b>{h}</b><br/><span>{d}</span></li>)}</ol>
+</Base>

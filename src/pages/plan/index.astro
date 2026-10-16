@@ -1,0 +1,93 @@
+---
+import Base from '../../layouts/Base.astro';
+import { matches, teams, stageLabel } from '../../data/tournament.js';
+import { byTeam, visas } from '../../data/visa.js';
+import { T } from '../../data/tickets.js';
+import { identity } from '../../data/identity.js';
+const ID = Object.fromEntries(Object.entries(identity).map(([t,x])=>[t,{n:x.nick,a:x.accent}]));
+const M = matches.map(m=>({n:m.n,d:m.date,ko:m.ko,t:m.title,h:m.home,a:m.away,s:stageLabel(m.stage),v:m.venueName,c:m.cityName,u:m.utc}));
+const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.length? x.options.map(o=>visas[o].code).join(' or ') : (x.note||'')]));
+---
+<Base title="Trip planner: plan & share your RWC 2027 trip" description="Build your Rugby World Cup 2027 trip itinerary and share it with your mates on WhatsApp.">
+<div id="builder">
+<h1>Plan your trip</h1><p class="muted">Pick your team and matches, then share the plan with your mates. Everything stays in the link; nothing is saved on a server.</p>
+<form id="pf" class="pform">
+<label>Trip name<input name="name" placeholder="Boks Tour 2027" maxlength="60"/></label>
+<label>Team<select name="team" required><option value="">Choose…</option>{teams.map(t=><option>{t.name}</option>)}</select></label>
+<label>Home city<input name="home" placeholder="Johannesburg" maxlength="40"/></label>
+<label>Number of mates<input name="mates" type="number" min="1" max="99" value="4"/></label>
+<label>Arrive<input name="arrive" type="date" min="2027-09-01" max="2027-11-30" value="2027-10-01"/></label>
+<label>Depart<input name="depart" type="date" min="2027-09-01" max="2027-11-30" value="2027-10-19"/></label>
+<fieldset><legend>Matches <button type="button" class="btn small ghost" id="mine">Select my team's</button></legend><div id="mlist" class="mlist"></div></fieldset>
+<button class="btn" type="submit">Build my plan</button>
+</form></div>
+<div id="view" hidden>
+<p class="kicker" id="vk"></p><h1 id="vt"></h1><p id="vsum"></p>
+<div class="teamband"></div><div class="count" id="cd"></div>
+<div class="share" id="sharebar">
+<a class="btn" id="wa" target="_blank" rel="noopener">Share on WhatsApp</a>
+<button class="btn ghost" id="copy">Copy link</button>
+<button class="btn ghost" id="native" hidden>Share…</button>
+<button class="btn ghost" id="edit">Edit plan</button></div>
+<div class="share" id="sharedbar" hidden><button class="btn" id="imin">I'm in! 🙌</button><a class="btn ghost" href="/plan/">Make your own plan</a></div>
+<p id="toast" class="note" hidden></p>
+<h2>Itinerary</h2><ol id="itin" class="itin"></ol>
+<h2>Matches</h2><ul id="vm" class="matches"></ul>
+<h2>Tickets</h2><p class="note">Buy only through official channels. Tickets from unofficial sellers are invalid and entry will be denied. <a href="/tickets/">How to buy safely →</a></p><ul id="vtix" class="tixlist"></ul>
+<h2>Visa</h2><p id="vv"></p><p class="muted">Not legal advice. Check immi.homeaffairs.gov.au. <a href="/visa/">Visa checklist →</a></p>
+<h2>Book</h2><div id="vb" class="deals"></div>
+</div>
+<script is:inline src="/js/plancodec.js"></script>
+<script is:inline define:vars={{M,V,T,ID}}>
+const $=s=>document.querySelector(s), f=$('#pf');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const day=d=>new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
+$('#mlist').innerHTML=M.map(m=>`<label class="mi" data-teams="${esc((m.h||'')+'|'+(m.a||''))}"><input type="checkbox" value="${m.n}"/> <b>${day(m.d)}</b> ${esc(m.t)} <span class="muted">· ${esc(m.c)}</span></label>`).join('');
+$('#mine').onclick=()=>{const t=f.team.value;document.querySelectorAll('.mi').forEach(l=>{const ts=l.dataset.teams.split('|');l.querySelector('input').checked=!!t&&ts.includes(t);});};
+f.team.onchange=()=>$('#mine').click();
+function render(p, shared){
+  $('#builder').hidden=true; $('#view').hidden=false; $('#sharebar').hidden=shared; $('#sharedbar').hidden=!shared;
+  const ms=M.filter(m=>p.matches.includes(m.n)).sort((a,b)=>a.u.localeCompare(b.u));
+  const nk=(ID[p.team]&&ID[p.team].n)||p.team; const title=p.name||`Our ${nk} tour`; document.documentElement.style.setProperty('--acc',(ID[p.team]&&ID[p.team].a)||'#0b5d3b');
+  document.title=`${title} | ScrumTrip`;
+  $('#vk').textContent=`${nk!==p.team?nk+' ('+p.team+')':p.team} · ${p.mates||1} ${p.mates==1?'person':'mates'}${p.home?' · from '+p.home:''}`;
+  $('#vt').textContent=title;
+  const cities=[...new Set(ms.map(m=>m.c))];
+  $('#vsum').textContent=`${day(p.arrive)} → ${day(p.depart)} · ${ms.length} match${ms.length==1?'':'es'} · ${cities.join(' → ')||'no matches picked yet'}`;
+  const tick=()=>{const t=new Date(p.arrive+'T00:00:00')-Date.now(), d=Math.max(0,Math.ceil(t/864e5)); $('#cd').innerHTML=`<b>${d}</b> days to go`;}; tick();
+  // itinerary by day
+  const out=[]; let cur=null; const s=new Date(p.arrive+'T12:00:00Z'), e=new Date(p.depart+'T12:00:00Z');
+  for(let d=new Date(s); d<=e && out.length<120; d.setUTCDate(d.getUTCDate()+1)){
+    const iso=d.toISOString().slice(0,10); const todays=ms.filter(m=>m.d===iso);
+    const next=ms.find(m=>m.d>=iso); let txt;
+    if(iso===p.arrive) txt=`Arrive in Australia${p.home?' from '+esc(p.home):''}${next?', head to <b>'+esc(next.c)+'</b>':''}`;
+    if(todays.length){ txt=(txt?txt+'. ':'')+todays.map(m=>`🏉 <b>${esc(m.t)}</b>, ${esc(m.v)}, ${esc(m.c)} (${m.ko} local)`).join('<br>'); cur=todays.at(-1).c; }
+    else if(iso===p.depart) txt=(txt?txt+'. ':'')+'Fly home ✈';
+    else if(!txt){ if(next && cur && next.c!==cur && next.d!==iso && ms.findIndex(m=>m.d>iso)===ms.indexOf(next)){ const prev=new Date(next.d+'T12:00:00Z'); prev.setUTCDate(prev.getUTCDate()-1); txt = prev.toISOString().slice(0,10)===iso?`Travel ${esc(cur)} → <b>${esc(next.c)}</b>`:`Free day in ${esc(cur)}`; } else txt=`Free day${cur?' in '+esc(cur):''}`; }
+    out.push(`<li><span class="d">${day(iso)}</span><span>${txt}</span></li>`);
+  }
+  $('#itin').innerHTML=out.join('');
+  $('#vm').innerHTML=ms.map(m=>`<li class="match"><div class="when"><b>${day(m.d)}</b><span>${m.ko} local</span></div><div class="what"><span class="tag">${esc(m.s)}</span><h3>${esc(m.t)}</h3><p>${esc(m.v)}, ${esc(m.c)}</p></div><a class="btn small" href="/ics/match-${m.n}.ics">+ Calendar</a></li>`).join('')||'<li class="muted">No matches selected.</li>';
+  $('#vtix').innerHTML=ms.map(m=>`<li><span><b>${day(m.d)}</b> ${esc(m.t)} · ${esc(m.c)}</span><span class="acts"><a class="btn small tix" target="_blank" rel="noopener" href="${T.official}">Official tickets ↗</a><a class="btn small ghost" target="_blank" rel="noopener" href="${T.hospitality}">Hospitality ↗</a></span></li>`).join('')||'<li class="muted">No matches selected.</li>';
+  $('#vv').innerHTML=`${esc(p.team)} passport holders: <b>${esc(V[p.team]||'check official site')}</b>`;
+  $('#vb').innerHTML=cities.map(c=>`<a class="deal" rel="sponsored nofollow" href="#affiliate-hotels-${encodeURIComponent(c)}"><b>🏨 Hotels in ${esc(c)}</b><span>for ${p.mates||1} (affiliate placeholder)</span></a>`).join('')+`<a class="deal" rel="sponsored nofollow" href="#affiliate-flights-${encodeURIComponent(p.home||'home')}"><b>✈ Flights${p.home?' from '+esc(p.home):''}</b><span>(affiliate placeholder)</span></a>`;
+}
+async function share(p){
+  const code=await encodePlan(p); const url=`${location.origin}/plan/#${code}`;
+  history.replaceState(null,'',`#edit=${code}`);
+  const nk=(ID[p.team]&&ID[p.team].n)||p.team; const msg=`🏉 ${p.name||'Our '+nk+' tour'}: following the ${nk} at Rugby World Cup 2027. Who's in? ${url}\n🎟 Reminder: buy match tickets only from official RWC 2027 ticketing (tickets.rugbyworldcup.com), not resellers.`;
+  $('#wa').href='https://wa.me/?text='+encodeURIComponent(msg);
+  const toast=t=>{$('#toast').textContent=t;$('#toast').hidden=false;setTimeout(()=>$('#toast').hidden=true,3000);};
+  $('#copy').onclick=async()=>{try{await navigator.clipboard.writeText(url);toast('Link copied!');}catch{prompt('Copy this link',url);}};
+  if(navigator.share){ $('#native').hidden=false; $('#native').onclick=()=>navigator.share({title:p.name||'ScrumTrip plan',text:msg,url}).catch(()=>{}); }
+  $('#edit').onclick=()=>{$('#view').hidden=true;$('#builder').hidden=false;};
+  window.__shareUrl=url;
+}
+f.onsubmit=async e=>{e.preventDefault(); const p={team:f.team.value,matches:[...f.querySelectorAll('#mlist input:checked')].map(i=>+i.value),arrive:f.arrive.value,depart:f.depart.value,home:f.home.value.trim(),name:f.name.value.trim(),mates:+f.mates.value||1};
+  if(p.depart<p.arrive){alert('Departure must be after arrival');return;} render(p,false); await share(p); scrollTo(0,0); };
+(async()=>{const h=location.hash.slice(1); if(!h) return; const isEdit=h.startsWith('edit='); try{const p=await decodePlan(isEdit?h.slice(5):h); window.__plan=p;
+  if(isEdit){ f.team.value=p.team; ['name','home','mates','arrive','depart'].forEach(k=>f[k].value=p[k]??''); document.querySelectorAll('#mlist input').forEach(i=>i.checked=p.matches.includes(+i.value)); render(p,false); share(p); }
+  else { render(p,true); $('#imin').onclick=async()=>{const t=`I'm in for ${p.name||'the '+((ID[p.team]&&ID[p.team].n)||p.team)+' tour'}! 🏉🇦🇺`; try{await navigator.clipboard.writeText(t);}catch{} $('#toast').textContent='Reply copied. Paste it in your group chat!'; $('#toast').hidden=false;}; }
+ }catch(err){ $('#toast').textContent='That plan link looks broken. Make a new one below.'; $('#toast').hidden=false; }})();
+</script>
+</Base>

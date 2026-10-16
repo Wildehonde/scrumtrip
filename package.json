@@ -1,0 +1,12 @@
+{
+ "name": "scrumtrip",
+ "type": "module",
+ "private": true,
+ "scripts": {
+  "build": "astro build && node scripts/rebase.mjs",
+  "dev": "astro dev"
+ },
+ "dependencies": {
+  "astro": "^4.16.0"
+ }
+}

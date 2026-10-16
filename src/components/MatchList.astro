@@ -1,0 +1,12 @@
+---
+import { stageLabel, slug } from '../data/tournament.js';
+import { dayFmt } from '../lib/fmt.js';
+import { T } from '../data/tickets.js';
+const { list } = Astro.props;
+---
+<ul class="matches">{list.map(m=>(
+<li class="match" data-team={[m.home,m.away].filter(Boolean).map(slug).join(',')} data-city={m.city} data-stage={m.stage.length===1?'Pool':m.stage}>
+<div class="when"><b>{dayFmt(m.date)}</b><span>{m.ko} local</span></div>
+<div class="what"><span class="tag">{stageLabel(m.stage)}</span><h3>{m.home ? <><a href={`/nations/${slug(m.home)}/`}>{m.home}</a> v <a href={`/nations/${slug(m.away)}/`}>{m.away}</a></> : m.title}</h3>
+<p>{m.venueName}, <a href={`/cities/${m.city}/`}>{m.cityName}</a></p></div>
+<div class="acts"><a class="btn small tix" href={T.official} target="_blank" rel="noopener" title="Official RWC 2027 ticketing">Buy tickets ↗</a><a class="btn small ghost" href={`/ics/match-${m.n}.ics`}>+ Calendar</a></div></li>))}</ul>

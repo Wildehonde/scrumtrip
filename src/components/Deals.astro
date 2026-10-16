@@ -1,0 +1,9 @@
+---
+import { aff } from '../lib/fmt.js';
+const { city } = Astro.props;
+---
+<div class="deals">
+<a class="deal" href={aff('flights',city)} rel="sponsored nofollow"><b>✈ Flights to {city}</b><span>Compare fares (affiliate placeholder)</span></a>
+<a class="deal" href={aff('hotels',city)} rel="sponsored nofollow"><b>🏨 Hotels in {city}</b><span>Match-week prices (affiliate placeholder)</span></a>
+<a class="deal" href={aff('tours',city)} rel="sponsored nofollow"><b>🎟 Things to do</b><span>Tours & experiences (affiliate placeholder)</span></a>
+</div>
