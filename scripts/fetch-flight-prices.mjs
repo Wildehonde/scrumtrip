@@ -1,25 +1,25 @@
-// ScrumTrip flight price fetcher (Travelpayouts / Aviasales Data API).
-// NOT ACTIVE: needs TRAVELPAYOUTS_TOKEN (free partner account, not created yet).
-// Without a token it exits and leaves the EXAMPLE data file untouched.
-// Endpoint below follows Travelpayouts' documented "prices_for_dates" v3 API. Confirm against current docs before enabling.
+// ScrumTrip flight price fetcher (Travelpayouts / Aviasales Data API v3 prices_for_dates).
+// Needs TRAVELPAYOUTS_TOKEN in env (sent as a header; never printed or written to disk).
+// Tries Sep 2027, then Oct 2027; if the API has no fares that far out it falls back to the
+// cheapest fare currently cached for the route (any date) and marks it "indicative".
 import fs from 'node:fs';
 const TOKEN = process.env.TRAVELPAYOUTS_TOKEN;
-const ROUTES = [ // origin IATA -> host-city IATA, departure month
-  ['JNB','PER'],['JNB','SYD'],['CPT','PER'],['LHR','SYD'],['DUB','PER'],['AKL','SYD'],['EZE','BNE'],['CDG','MEL'],['NRT','BNE'],['EDI','MEL'],
-];
-const MONTH = '2027-09'; // fly in late Sep for 1 Oct start
-if (!TOKEN) { console.log('No TRAVELPAYOUTS_TOKEN set. Skipping; site keeps showing EXAMPLE data.'); process.exit(0); }
-const out = { generatedAt: new Date().toISOString(), isExample: false, currency: 'usd', routes: {} };
-for (const [o,d] of ROUTES) {
-  const url = `https://api.travelpayouts.com/aviasales/v3/prices_for_dates?origin=${o}&destination=${d}&departure_at=${MONTH}&currency=usd&sorting=price&limit=1&token=${TOKEN}`;
-  const r = await fetch(url); const j = await r.json();
-  const best = j?.data?.[0];
-  const file = `src/data/prices/history.json`;
-  const hist = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,'utf8')) : {};
-  (hist[`${o}-${d}`] ??= []).push({ date: out.generatedAt.slice(0,10), price: best?.price ?? null });
-  fs.writeFileSync(file, JSON.stringify(hist,null,1));
-  out.routes[`${o}-${d}`] = hist[`${o}-${d}`];
+if (!TOKEN) { console.log('No TRAVELPAYOUTS_TOKEN set. Skipping.'); process.exit(0); }
+import { ORIGINS, DESTS } from '../src/data/origins.js';
+const api = async q => { const r = await fetch(`https://api.travelpayouts.com/aviasales/v3/prices_for_dates?${q}&currency=usd&sorting=price&limit=1&one_way=true`, { headers: { 'X-Access-Token': TOKEN } });
+  if (!r.ok) return null; const j = await r.json(); return j?.data?.[0] || null; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const out = { fetchedAt: new Date().toISOString(), source: 'Aviasales (Travelpayouts Data API)', currency: 'usd', note: 'Cheapest cached one-way fare. Indicative = no fares cached yet for Sep-Oct 2027, so the nearest available date is shown.', routes: {} };
+const origins = [...new Set(Object.values(ORIGINS).flat())];
+for (const o of origins) for (const d of DESTS) {
+  let best = null, indicative = false;
+  for (const m of ['2027-09', '2027-10']) { best = await api(`origin=${o}&destination=${d}&departure_at=${m}`); await sleep(250); if (best) break; }
+  if (!best) { best = await api(`origin=${o}&destination=${d}`); indicative = !!best; await sleep(250); }
+  out.routes[`${o}-${d}`] = best ? { price: best.price, departure: best.departure_at.slice(0, 10), airline: best.airline, transfers: best.transfers, indicative } : null;
 }
-fs.writeFileSync('src/data/prices/latest.json', JSON.stringify(out,null,1));
-console.log('Saved', Object.keys(out.routes).length, 'routes');
-// Run daily (e.g. Cloudflare Cron / GitHub Actions), then rebuild the site.
+fs.writeFileSync('src/data/prices/live.json', JSON.stringify(out, null, 1));
+const hf = 'src/data/prices/history.json'; const hist = fs.existsSync(hf) ? JSON.parse(fs.readFileSync(hf, 'utf8')) : {};
+for (const [k, v] of Object.entries(out.routes)) if (v) (hist[k] ??= []).push({ date: out.fetchedAt.slice(0, 10), price: v.price, indicative: v.indicative });
+fs.writeFileSync(hf, JSON.stringify(hist, null, 1));
+const n = Object.values(out.routes).filter(Boolean).length;
+console.log(`Saved ${n}/${Object.keys(out.routes).length} routes with data (${Object.values(out.routes).filter(v => v && !v.indicative).length} for Sep-Oct 2027).`);

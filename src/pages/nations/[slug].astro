@@ -33,5 +33,5 @@ const nick=display(team.name); const acc=identity[team.name].accent;
  <span class={`tag ko${r.o.pos===1?' likely':''}`}>{r.o.pos===1?`Likely if ${nick} top Pool ${team.pool}`:`If ${r.o.label}`}</span>
  <b>{short(r.m)}</b><br/>{nick} {r.rule}{r.guess?<span class="guess"> · likely: {r.guess} <i>(guess)</i></span>:<span class="muted"> · too open to call: bracket rule only</span>}</li>))}</ul></>:null;})}
 <VisaBox team={team.name}/>
-<h2>Plan the trip</h2>{cityKeys.map(k=><><h3><a href={`/cities/${k}/`}>{cities[k].name}</a></h3><Deals city={cities[k].name}/></>)}
+<h2>Plan the trip</h2>{cityKeys.map(k=><><h3><a href={`/cities/${k}/`}>{cities[k].name}</a></h3><Deals city={cities[k].name} team={team.name} date={(()=>{const d=new Date(mine.find(m=>m.city===k).date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-2);return d.toISOString().slice(0,10);})()}/></>)}
 </Base>

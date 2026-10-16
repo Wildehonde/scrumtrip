@@ -2,6 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import MatchList from '../../components/MatchList.astro';
 import Maps from '../../components/Maps.astro';
+import Fares from '../../components/Fares.astro';
+import { CITY_IATA } from '../../data/flights.js';
 import Deals from '../../components/Deals.astro';
 import { eventSchema } from '../../lib/schema.js';
 import { cities, matches, venues } from '../../data/tournament.js';
@@ -22,5 +24,6 @@ const vs = Object.values(venues).filter(v=>v.city===city).map(v=>v.name);
 <section><h3>💡 Fan tips</h3><ul>{g.tips.map(x=><li>{x}</li>)}</ul></section>
 </div>
 <h2>Book your trip</h2><Deals city={c.name}/>
+<h2>Flights to {c.name}</h2><Fares dest={CITY_IATA[city]} date={list[0] ? (()=>{const d=new Date(list[0].date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-2);return d.toISOString().slice(0,10);})() : undefined}/>
 <h2>{list.length} matches in {c.name}</h2><MatchList list={list}/>
 </Base>

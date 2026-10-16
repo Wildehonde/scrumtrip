@@ -1,9 +1,12 @@
 ---
 import { aff } from '../lib/fmt.js';
-const { city } = Astro.props;
+import { ORIGINS, CITY_IATA, IATA_NAME, avLink, fare, checked } from '../data/flights.js';
+const { city, team, date } = Astro.props;
+const dest = CITY_IATA[city.toLowerCase()]; const o = team && ORIGINS[team]?.[0]; const fr = o && dest ? fare(o, dest) : null;
+const flightHref = o && dest ? avLink(o, dest, date) : dest ? `/cities/${city.toLowerCase()}/#fares` : aff('flights', city);
 ---
 <div class="deals">
-<a class="deal" href={aff('flights',city)} rel="sponsored nofollow"><b>✈ Flights to {city}</b><span>Compare fares (affiliate placeholder)</span></a>
+<a class="deal" href={flightHref} rel="sponsored nofollow noopener" target={o?'_blank':undefined}><b>✈ Flights to {city}{o?` from ${IATA_NAME[o]}`:''}</b><span>{fr?`from $${fr.price}${fr.indicative?' (indicative)':''} · Aviasales, checked ${checked}`:o?'Book on Aviasales':'Compare fares from your country'}</span></a>
 <a class="deal" href={aff('hotels',city)} rel="sponsored nofollow"><b>🏨 Hotels in {city}</b><span>Match-week prices (affiliate placeholder)</span></a>
 <a class="deal" href={aff('tours',city)} rel="sponsored nofollow"><b>🎟 Things to do</b><span>Tours & experiences (affiliate placeholder)</span></a>
 </div>

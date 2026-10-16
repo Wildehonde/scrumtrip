@@ -1,0 +1,11 @@
+---
+import { ORIGINS, IATA_NAME, avLink, fare, checked } from '../data/flights.js';
+import { display } from '../data/identity.js';
+const { dest, date } = Astro.props; // dest IATA
+const rows = Object.entries(ORIGINS).flatMap(([t, os]) => os.map(o => ({ t, o, f: fare(o, dest) })));
+---
+<div class="fares" id="fares"><table><thead><tr><th>Fans of</th><th>From</th><th>Cheapest one-way</th><th></th></tr></thead><tbody>
+{rows.map(r => <tr><td>{display(r.t)}</td><td>{IATA_NAME[r.o]}</td><td>{r.f ? <>${r.f.price}{r.f.indicative ? <span class="muted"> indicative ({r.f.departure})</span> : <span class="muted"> ({r.f.departure})</span>}</> : <span class="muted">no fare yet</span>}</td>
+<td><a class="btn small" rel="sponsored nofollow noopener" target="_blank" href={avLink(r.o, dest, date)}>Book ↗</a></td></tr>)}
+</tbody></table>
+<p class="muted small">{checked ? `Prices from Aviasales, checked ${checked}.` : 'Prices from Aviasales.'} Cheapest cached one-way fares in USD; "indicative" means no fares exist yet for Sep–Oct 2027, so the nearest available date is shown. Book links are affiliate links (ScrumTrip may earn a commission).</p></div>

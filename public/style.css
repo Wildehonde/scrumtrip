@@ -56,3 +56,4 @@ h2{margin-top:40px}.muted{color:var(--mu)}
 @media(max-width:700px){.maps{grid-template-columns:1fr}}
 .stagehead{margin:1rem 0 .3rem;font-size:1rem;border-bottom:2px solid #e5e5e5;padding-bottom:.2rem;list-style:none}.mlist .stagehead:first-child{margin-top:0}
 .korows{list-style:none;padding:0}.korows li{padding:.5rem .7rem;border:1px solid #e5e5e5;border-radius:8px;margin:.4rem 0}.korows li.likely{background:#fffbea;border-color:#e0b100}.guess i{color:#888;font-weight:normal}
+.fares{overflow-x:auto}.fares table{border-collapse:collapse;width:100%;font-size:.9rem}.fares th,.fares td{padding:.35rem .5rem;border-bottom:1px solid #eee;text-align:left;white-space:nowrap}.small{font-size:.8rem}

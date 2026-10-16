@@ -3,10 +3,12 @@ import Base from '../../layouts/Base.astro';
 import { matches, teams, stageLabel, pools, teamKnockouts } from '../../data/tournament.js';
 import { byTeam, visas } from '../../data/visa.js';
 import { T } from '../../data/tickets.js';
+import { ORIGINS, CITY_IATA, IATA_NAME, live, checked, MARKER } from '../../data/flights.js';
 import { identity } from '../../data/identity.js';
 const ID = Object.fromEntries(Object.entries(identity).map(([t,x])=>[t,{n:x.nick,a:x.accent}]));
 const M = matches.map(m=>({st:m.stage,n:m.n,d:m.date,ko:m.ko,t:m.title,h:m.home,a:m.away,s:stageLabel(m.stage),v:m.venueName,c:m.cityName,la:m.lat,lo:m.lon,ck:m.city,u:m.utc}));
 const KP = Object.fromEntries(teams.map(t=>[t.name, teamKnockouts(t.name).map(o=>({pos:o.pos,label:o.label,it:o.items.map(i=>({n:i.m.n,r:i.rule,g:i.guess}))}))]));
+const FL = {o:ORIGINS, ci:CITY_IATA, nm:IATA_NAME, r:live.routes, ck:checked, mk:MARKER};
 const TP = Object.fromEntries(teams.map(t=>[t.name,t.pool]));
 const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.length? x.options.map(o=>visas[o].code).join(' or ') : (x.note||'')]));
 ---
@@ -40,7 +42,7 @@ const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.l
 <h2>Book</h2><div id="vb" class="deals"></div>
 </div>
 <script is:inline src="/js/plancodec.js"></script>
-<script is:inline define:vars={{M,V,T,ID,KP,TP}}>
+<script is:inline define:vars={{M,V,T,ID,KP,TP,FL}}>
 const $=s=>document.querySelector(s), f=$('#pf');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const day=d=>new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
@@ -79,7 +81,9 @@ function render(p, shared){
   $('#vm').innerHTML=ms.map((m,ix)=>{const g=SG.find(([k])=>k===(m.st.length===1?'Pool':m.st))[1]; const prev=ix?SG.find(([k])=>k===(ms[ix-1].st.length===1?'Pool':ms[ix-1].st))[1]:null; return (g!==prev?`<li class="stagehead"><h4>${g}</h4></li>`:'')+`<li class="match"><div class="when"><b>${day(m.d)}</b><span>${m.ko} local</span></div><div class="what"><span class="tag">${esc(m.s)}</span>${(()=>{const ops=KP[p.team]||[];return ops.flatMap(o=>o.it.filter(i=>i.n===m.n).map(i=>` <span class="tag ko${o.pos==1?' likely':''}">${esc(badgeTxt(p.team,o,i))}</span>`)).join('');})()}<h3>${esc(m.t)}</h3><p>${esc(m.v)}, <a href="/cities/${m.ck}/">${esc(m.c)}</a> · <a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${m.la}&mlon=${m.lo}#map=16/${m.la}/${m.lo}">📍 Stadium map</a> · <a href="/cities/${m.ck}/">🗺 City & Australia maps</a></p></div><a class="btn small" href="/ics/match-${m.n}.ics">+ Calendar</a></li>`;}).join('')||'<li class="muted">No matches selected.</li>';
   $('#vtix').innerHTML=ms.map(m=>`<li><span><b>${day(m.d)}</b> ${esc(m.t)} · ${esc(m.c)}</span><span class="acts"><a class="btn small tix" target="_blank" rel="noopener" href="${T.official}">Official tickets ↗</a><a class="btn small ghost" target="_blank" rel="noopener" href="${T.hospitality}">Hospitality ↗</a></span></li>`).join('')||'<li class="muted">No matches selected.</li>';
   $('#vv').innerHTML=`${esc(p.team)} passport holders: <b>${esc(V[p.team]||'check official site')}</b>`;
-  $('#vb').innerHTML=cities.map(c=>`<a class="deal" rel="sponsored nofollow" href="#affiliate-hotels-${encodeURIComponent(c)}"><b>🏨 Hotels in ${esc(c)}</b><span>for ${p.mates||1} (affiliate placeholder)</span></a>`).join('')+`<a class="deal" rel="sponsored nofollow" href="#affiliate-flights-${encodeURIComponent(p.home||'home')}"><b>✈ Flights${p.home?' from '+esc(p.home):''}</b><span>(affiliate placeholder)</span></a>`;
+  $('#vb').innerHTML=cities.map(c=>`<a class="deal" rel="sponsored nofollow" href="#affiliate-hotels-${encodeURIComponent(c)}"><b>🏨 Hotels in ${esc(c)}</b><span>for ${p.mates||1} (affiliate placeholder)</span></a>`).join('')+(()=>{const o=(FL.o[p.team]||[])[0]; const first=ms[0]; const d=first?FL.ci[first.ck]:'SYD'; if(!o) return ''; const dt=p.arrive; const fr=FL.r[o+'-'+d];
+  const href=`https://www.aviasales.com/search/${o}${dt.slice(8,10)}${dt.slice(5,7)}${d}1?marker=${FL.mk}`;
+  return `<a class="deal" rel="sponsored nofollow noopener" target="_blank" href="${href}"><b>✈ Flights ${esc(FL.nm[o])} → ${esc(FL.nm[d])}, ${day(dt)}</b><span>${fr?'from $'+fr.price+(fr.indicative?' (indicative)':'')+' · ':''}Prices from Aviasales${FL.ck?', checked '+esc(FL.ck):''}</span></a>`;})();
 }
 async function share(p){
   const code=await encodePlan(p); const url=`${location.origin}/plan/#${code}`;
