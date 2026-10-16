@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import MatchList from '../../components/MatchList.astro';
+import Maps from '../../components/Maps.astro';
 import Deals from '../../components/Deals.astro';
 import { eventSchema } from '../../lib/schema.js';
 import { cities, matches, venues } from '../../data/tournament.js';
@@ -13,6 +14,7 @@ const vs = Object.values(venues).filter(v=>v.city===city).map(v=>v.name);
 <Base schema={eventSchema(list)} title={`${c.name} RWC 2027 guide: stadium, transport, where to stay`} description={`Fan guide to ${c.name} for Rugby World Cup 2027: ${vs.join(' & ')}, getting there, where to stay and ${list.length} matches.`}>
 <p class="kicker">{c.state} · {vs.join(' & ')}</p><h1>{c.name} fan guide</h1><p>{c.blurb}</p>
 <p class="note">ScrumTrip guidance, not official information. Check transport and venue details with official sources before you travel.</p>
+<Maps city={city}/>
 <div class="guide">
 <section><h3>🏟 The stadium</h3><p>{g.stadium}</p></section>
 <section><h3>🚆 Getting there</h3><p class="muted">Fly into {g.airport}.</p><ul>{g.getting.map(x=><li>{x}</li>)}</ul></section>

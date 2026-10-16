@@ -1,0 +1,19 @@
+---
+// Free maps: Leaflet + OpenStreetMap tiles, no API key. Coords checked against OSM Nominatim 16 Oct 2026.
+import { venues, cities } from '../data/tournament.js';
+const { city } = Astro.props;
+const vs = Object.values(venues).filter(v=>v.city===city);
+const data = { city: cities[city].name, vs: vs.map(v=>({n:v.name,lat:v.lat,lon:v.lon})) };
+---
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<div class="maps"><figure><div id="map-au" class="map"></div><figcaption>{data.city} in Australia</figcaption></figure>
+<figure><div id="map-city" class="map"></div><figcaption>{vs.map(v=>v.name).join(' & ')}, {data.city}</figcaption></figure></div>
+<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script is:inline define:vars={{data}}>
+const tile=m=>L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(m);
+const au=L.map('map-au',{scrollWheelZoom:false,zoomControl:false,dragging:false}).setView([-27,134],3); tile(au);
+L.marker([data.vs[0].lat,data.vs[0].lon]).addTo(au).bindTooltip(data.city,{permanent:true});
+const cm=L.map('map-city',{scrollWheelZoom:false}); tile(cm);
+const b=data.vs.map(v=>{L.marker([v.lat,v.lon]).addTo(cm).bindPopup(`<b>${v.n}</b><br><a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${v.lat}&mlon=${v.lon}#map=16/${v.lat}/${v.lon}">Open map ↗</a>`);return [v.lat,v.lon];});
+b.length>1?cm.fitBounds(b,{padding:[30,30]}):cm.setView(b[0],14);
+</script>

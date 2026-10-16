@@ -1,13 +1,13 @@
 import fs from 'node:fs';
 export const venues = {
-  'perth': {name:'Perth Stadium', city:'perth', tz:'Australia/Perth'},
-  'adelaide': {name:'Adelaide Oval', city:'adelaide', tz:'Australia/Adelaide'},
-  'docklands': {name:'Docklands Stadium', city:'melbourne', tz:'Australia/Melbourne'},
-  'stadium-australia': {name:'Stadium Australia', city:'sydney', tz:'Australia/Sydney'},
-  'sfs': {name:'Sydney Football Stadium', city:'sydney', tz:'Australia/Sydney'},
-  'brisbane': {name:'Brisbane Stadium', city:'brisbane', tz:'Australia/Brisbane'},
-  'townsville': {name:'North Queensland Stadium', city:'townsville', tz:'Australia/Brisbane'},
-  'newcastle': {name:'Newcastle Stadium', city:'newcastle', tz:'Australia/Sydney'},
+  'perth': {lat:-31.95104, lon:115.88908, name:'Perth Stadium', city:'perth', tz:'Australia/Perth'},
+  'adelaide': {lat:-34.91559, lon:138.59616, name:'Adelaide Oval', city:'adelaide', tz:'Australia/Adelaide'},
+  'docklands': {lat:-37.81653, lon:144.94752, name:'Docklands Stadium', city:'melbourne', tz:'Australia/Melbourne'},
+  'stadium-australia': {lat:-33.84711, lon:151.06338, name:'Stadium Australia', city:'sydney', tz:'Australia/Sydney'},
+  'sfs': {lat:-33.88916, lon:151.22514, name:'Sydney Football Stadium', city:'sydney', tz:'Australia/Sydney'},
+  'brisbane': {lat:-27.46486, lon:153.00961, name:'Brisbane Stadium', city:'brisbane', tz:'Australia/Brisbane'},
+  'townsville': {lat:-19.26623, lon:146.81643, name:'North Queensland Stadium', city:'townsville', tz:'Australia/Brisbane'},
+  'newcastle': {lat:-32.91882, lon:151.7265, name:'Newcastle Stadium', city:'newcastle', tz:'Australia/Sydney'},
 };
 export const cities = {
   perth:{name:'Perth', state:'WA', blurb:'Hosts the opening match and two Round of 16 ties. Closest host city to South Africa.'},
@@ -40,7 +40,7 @@ export const matches = raw.map((l,i)=>{
   const naive=new Date(`${date}T${ko}:00Z`);
   const utc=new Date(naive.getTime()-offsetMin(v.tz,naive)*60000);
   const [home,away] = stage.length===1 ? title.split(' v ') : [null,null];
-  return {id:i+1,date,stage,title,venue,venueName:v.name,city:v.city,cityName:cities[v.city].name,ko,utc:utc.toISOString(),home,away};
+  return {id:i+1,date,stage,title,venue,venueName:v.name,lat:v.lat,lon:v.lon,city:v.city,cityName:cities[v.city].name,ko,utc:utc.toISOString(),home,away};
 }).sort((a,b)=>a.utc.localeCompare(b.utc)).map((m,i)=>({...m,n:i+1}));
 export const stageLabel = s => s.length===1?`Pool ${s}`:({R16:'Round of 16',QF:'Quarter-final',SF:'Semi-final',Bronze:'Bronze final',Final:'Final'})[s];
 export function ics(list, name){

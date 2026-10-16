@@ -52,3 +52,5 @@ h2{margin-top:40px}.muted{color:var(--mu)}
 .tag.ko{background:#eef3ff;color:#1b3a8a}.tag.ko.likely{background:#fff4d6;color:#7a5200}
 .kopath{border:1px solid #ddd;border-radius:10px;padding:.6rem 1rem;margin:.8rem 0}.kopath.likely{border-color:#e0b100;background:#fffbea}
 .kosteps{margin:.4rem 0 .8rem 1.2rem}.kosteps li{margin:.2rem 0}
+.maps{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}.maps figure{margin:0}.map{height:280px;border-radius:10px;border:1px solid #ddd}.maps figcaption{font-size:.85rem;color:#666;margin-top:.3rem}
+@media(max-width:700px){.maps{grid-template-columns:1fr}}
