@@ -16,8 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+        continue-on-error: true
         with:
-          # Create the Pages site (source: GitHub Actions) on the first run.
+          # Create the Pages site (source: GitHub Actions) when the token can administer the repo.
           enablement: true
       - uses: actions/setup-node@v4
         with:
