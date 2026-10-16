@@ -49,3 +49,17 @@ export function ics(list, name){
     return ['BEGIN:VEVENT',`UID:scrumtrip-${m.n}@scrumtrip.com`,`DTSTAMP:20261016T000000Z`,`DTSTART:${s}`,`DTEND:${e}`,`SUMMARY:${m.title} (${stageLabel(m.stage)})`,`LOCATION:${m.venueName}, ${m.cityName}, Australia`,'DESCRIPTION:Kick-off '+m.ko+' local time. Unofficial calendar by ScrumTrip.','END:VEVENT'].join('\r\n');});
   return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ScrumTrip//RWC2027//EN',`X-WR-CALNAME:${name}`,...ev,'END:VCALENDAR'].join('\r\n');
 }
+// Knockout paths from the official bracket (R16 slots -> QF -> SF -> Final)
+const koBy = code => matches.find(m=>m.title.startsWith(code+':'));
+const ord = {1:'1st',2:'2nd',3:'3rd'};
+export function knockoutPaths(pool){
+  const r16 = matches.filter(m=>m.stage==='R16');
+  const find = pos => r16.filter(m=>{const slots=m.title.split(': ')[1].split(' v ');
+    return slots.some(s=>{const x=s.match(/^(\d)\w\w Pool ([A-F/]+)$/); return x && x[1]==pos && x[2].split('/').includes(pool);});});
+  return [1,2,3].map(pos=>({pos, label:`${ord[pos]} Pool ${pool}`, routes: find(pos).map(r=>{
+    const code=r.title.split(':')[0]; const qf=matches.find(m=>m.stage==='QF'&&m.title.includes(`W ${code}`));
+    const qc=qf.title.split(':')[0]; const sf=matches.find(m=>m.stage==='SF'&&m.title.includes(`W ${qc}`));
+    const fin=matches.find(m=>m.stage==='Final');
+    return {r16:r, qf, sf, final:fin};
+  })})).filter(p=>p.routes.length);
+}

@@ -6,11 +6,13 @@ import FanIntro from '../../components/FanIntro.astro';
 import { identity, display } from '../../data/identity.js';
 import VisaBox from '../../components/VisaBox.astro';
 import { eventSchema } from '../../lib/schema.js';
-import { teams, matches, pools, cities, slug } from '../../data/tournament.js';
+import { teams, matches, pools, cities, slug, knockoutPaths } from '../../data/tournament.js';
 export function getStaticPaths(){ return teams.map(t=>({params:{slug:t.slug}, props:{team:t}})); }
 const { team } = Astro.props;
 const mine = matches.filter(m=>m.home===team.name||m.away===team.name);
 const ko = matches.filter(m=>m.stage==='R16' && (m.title.includes(`1st Pool ${team.pool}`)||m.title.includes(`2nd Pool ${team.pool}`)));
+const paths=knockoutPaths(team.pool);
+const short=m=>`${m.title.split(':')[0]} · ${m.date.slice(8)} ${m.date.slice(5,7)==='10'?'Oct':'Nov'} · ${m.venueName}, ${m.cityName}`;
 const cityKeys=[...new Set(mine.map(m=>m.city))];
 const nick=display(team.name); const acc=identity[team.name].accent;
 ---
@@ -22,7 +24,17 @@ const nick=display(team.name); const acc=identity[team.name].accent;
 <p>{team.name} play {mine.length} pool matches in {cityKeys.map(k=>cities[k].name).join(', ')}. <a class="btn small" href={`/ics/${team.slug}.ics`}>Add all to calendar</a></p>
 <div class="cta-band"><div><b>Plan your {nick} tour</b><br/><span class="muted">Itinerary, visa and a link to share with your mates.</span></div><a class="btn" href="/plan/">Plan your trip</a></div>
 <h2>Pool fixtures</h2><MatchList list={mine}/>
-<h2>Possible Round of 16</h2><p class="muted">Depends on pool finish. 3rd-placed teams may also qualify (four best third-placed teams).</p><MatchList list={ko}/>
+<h2>{nick}'s knockout path</h2>
+<p class="muted">From the official World Rugby bracket. Opponents depend on other pools; the venues and dates are fixed.</p>
+{paths.map((p,i)=>(<div class={`kopath${i===0?' likely':''}`}>
+<h3>{i===0?<span class="tag">Likely</span>:null} If {nick} finish {p.label}{p.pos===3?' (only if one of the 4 best thirds)':''}</h3>
+{p.pos===3?<p class="muted">Which Round of 16 a third-placed team plays depends on which pools the four best thirds come from. Possible ties:</p>:null}
+{p.routes.map(r=>(<ol class="kosteps">
+<li><b>Round of 16:</b> {short(r.r16)} <span class="muted">({r.r16.title.split(': ')[1]})</span></li>
+<li><b>Quarter-final:</b> {short(r.qf)}</li>
+<li><b>Semi-final:</b> {short(r.sf)}</li>
+<li><b>Final:</b> {short(r.final)}</li></ol>))}
+</div>))}
 <VisaBox team={team.name}/>
 <h2>Plan the trip</h2>{cityKeys.map(k=><><h3><a href={`/cities/${k}/`}>{cities[k].name}</a></h3><Deals city={cities[k].name}/></>)}
 </Base>

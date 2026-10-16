@@ -49,3 +49,6 @@ h2{margin-top:40px}.muted{color:var(--mu)}
 .teamband{height:8px;border-radius:6px;background:var(--acc,#0b5d3b);margin:18px 0 0}
 .fan{border-left:6px solid var(--acc);background:#fff;border-radius:10px;padding:10px 16px;margin:14px 0}.fan h2{margin:4px 0 6px}.fan ul{margin:6px 0;padding-left:18px}
 #view .count{background:var(--acc,#0b5d3b)}
+.tag.ko{background:#eef3ff;color:#1b3a8a}.tag.ko.likely{background:#fff4d6;color:#7a5200}
+.kopath{border:1px solid #ddd;border-radius:10px;padding:.6rem 1rem;margin:.8rem 0}.kopath.likely{border-color:#e0b100;background:#fffbea}
+.kosteps{margin:.4rem 0 .8rem 1.2rem}.kosteps li{margin:.2rem 0}

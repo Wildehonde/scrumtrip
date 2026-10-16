@@ -1,11 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { matches, teams, stageLabel } from '../../data/tournament.js';
+import { matches, teams, stageLabel, pools, knockoutPaths } from '../../data/tournament.js';
 import { byTeam, visas } from '../../data/visa.js';
 import { T } from '../../data/tickets.js';
 import { identity } from '../../data/identity.js';
 const ID = Object.fromEntries(Object.entries(identity).map(([t,x])=>[t,{n:x.nick,a:x.accent}]));
 const M = matches.map(m=>({n:m.n,d:m.date,ko:m.ko,t:m.title,h:m.home,a:m.away,s:stageLabel(m.stage),v:m.venueName,c:m.cityName,u:m.utc}));
+const KP = Object.fromEntries(Object.keys(pools).map(pl=>[pl, knockoutPaths(pl).map(p=>({pos:p.pos,label:p.label,ns:[...new Set(p.routes.flatMap(r=>[r.r16.n,r.qf.n,r.sf.n,r.final.n]))]}))]));
+const TP = Object.fromEntries(teams.map(t=>[t.name,t.pool]));
 const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.length? x.options.map(o=>visas[o].code).join(' or ') : (x.note||'')]));
 ---
 <Base title="Trip planner: plan & share your RWC 2027 trip" description="Build your Rugby World Cup 2027 trip itinerary and share it with your mates on WhatsApp.">
@@ -18,7 +20,7 @@ const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.l
 <label>Number of mates<input name="mates" type="number" min="1" max="99" value="4"/></label>
 <label>Arrive<input name="arrive" type="date" min="2027-09-01" max="2027-11-30" value="2027-10-01"/></label>
 <label>Depart<input name="depart" type="date" min="2027-09-01" max="2027-11-30" value="2027-10-19"/></label>
-<fieldset><legend>Matches <button type="button" class="btn small ghost" id="mine">Select my team's</button></legend><div id="mlist" class="mlist"></div></fieldset>
+<fieldset><legend>Matches <button type="button" class="btn small ghost" id="mine">Select my team's</button></legend><p class="muted" id="kohint" hidden>Knockouts: <label><input type="radio" name="fin" value="1" checked/> if we top the pool (likely)</label> <label><input type="radio" name="fin" value="2"/> 2nd</label> <label><input type="radio" name="fin" value="3"/> best 3rd</label> <label><input type="radio" name="fin" value="0"/> pool only</label></p><div id="mlist" class="mlist"></div></fieldset>
 <button class="btn" type="submit">Build my plan</button>
 </form></div>
 <div id="view" hidden>
@@ -38,13 +40,19 @@ const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.l
 <h2>Book</h2><div id="vb" class="deals"></div>
 </div>
 <script is:inline src="/js/plancodec.js"></script>
-<script is:inline define:vars={{M,V,T,ID}}>
+<script is:inline define:vars={{M,V,T,ID,KP,TP}}>
 const $=s=>document.querySelector(s), f=$('#pf');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const day=d=>new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
-$('#mlist').innerHTML=M.map(m=>`<label class="mi" data-teams="${esc((m.h||'')+'|'+(m.a||''))}"><input type="checkbox" value="${m.n}"/> <b>${day(m.d)}</b> ${esc(m.t)} <span class="muted">· ${esc(m.c)}</span></label>`).join('');
-$('#mine').onclick=()=>{const t=f.team.value;document.querySelectorAll('.mi').forEach(l=>{const ts=l.dataset.teams.split('|');l.querySelector('input').checked=!!t&&ts.includes(t);});};
-f.team.onchange=()=>$('#mine').click();
+$('#mlist').innerHTML=M.map(m=>`<label class="mi" data-teams="${esc((m.h||'')+'|'+(m.a||''))}"><input type="checkbox" value="${m.n}"/> <b>${day(m.d)}</b> ${esc(m.t)} <span class="muted">· ${esc(m.c)}</span> <span class="kob"></span></label>`).join('');
+function nickOf(t){return (ID[t]&&ID[t].n)||t;}
+function badges(){const t=f.team.value, pl=TP[t]; $('#kohint').hidden=!pl;
+  document.querySelectorAll('.mi').forEach(l=>{const n=+l.querySelector('input').value; const hits=pl?KP[pl].filter(p=>p.ns.includes(n)):[];
+    l.querySelector('.kob').innerHTML=hits.map(p=>`<span class="tag ko${p.pos==1?' likely':''}">${p.pos==1?'Likely if ':'If '}${esc(nickOf(t))} ${p.pos==1?'top':'finish '+p.label.split(' ')[0]} Pool ${pl}</span>`).join(' ');});}
+function koFor(t){const pl=TP[t]; const fin=+((f.querySelector('input[name=fin]:checked')||{}).value||0); const p=pl&&KP[pl].find(x=>x.pos===fin); return p?p.ns:[];}
+$('#mine').onclick=()=>{const t=f.team.value;document.querySelectorAll('.mi').forEach(l=>{const ts=l.dataset.teams.split('|');const ko=koFor(t); l.querySelector('input').checked=!!t&&(ts.includes(t)||ko.includes(+l.querySelector('input').value));});};
+f.team.onchange=()=>{badges();$('#mine').click();};
+f.querySelectorAll('input[name=fin]').forEach(r=>r.onchange=()=>$('#mine').click());
 function render(p, shared){
   $('#builder').hidden=true; $('#view').hidden=false; $('#sharebar').hidden=shared; $('#sharedbar').hidden=!shared;
   const ms=M.filter(m=>p.matches.includes(m.n)).sort((a,b)=>a.u.localeCompare(b.u));
@@ -67,7 +75,7 @@ function render(p, shared){
     out.push(`<li><span class="d">${day(iso)}</span><span>${txt}</span></li>`);
   }
   $('#itin').innerHTML=out.join('');
-  $('#vm').innerHTML=ms.map(m=>`<li class="match"><div class="when"><b>${day(m.d)}</b><span>${m.ko} local</span></div><div class="what"><span class="tag">${esc(m.s)}</span><h3>${esc(m.t)}</h3><p>${esc(m.v)}, ${esc(m.c)}</p></div><a class="btn small" href="/ics/match-${m.n}.ics">+ Calendar</a></li>`).join('')||'<li class="muted">No matches selected.</li>';
+  $('#vm').innerHTML=ms.map(m=>`<li class="match"><div class="when"><b>${day(m.d)}</b><span>${m.ko} local</span></div><div class="what"><span class="tag">${esc(m.s)}</span>${(()=>{const pl=TP[p.team];const h=pl?KP[pl].find(x=>x.ns.includes(m.n)):null;return h?` <span class="tag ko${h.pos==1?' likely':''}">${h.pos==1?'Likely if '+esc(nickOf(p.team))+' top Pool '+pl:'If '+esc(nickOf(p.team))+' finish '+h.label}</span>`:'';})()}<h3>${esc(m.t)}</h3><p>${esc(m.v)}, ${esc(m.c)}</p></div><a class="btn small" href="/ics/match-${m.n}.ics">+ Calendar</a></li>`).join('')||'<li class="muted">No matches selected.</li>';
   $('#vtix').innerHTML=ms.map(m=>`<li><span><b>${day(m.d)}</b> ${esc(m.t)} · ${esc(m.c)}</span><span class="acts"><a class="btn small tix" target="_blank" rel="noopener" href="${T.official}">Official tickets ↗</a><a class="btn small ghost" target="_blank" rel="noopener" href="${T.hospitality}">Hospitality ↗</a></span></li>`).join('')||'<li class="muted">No matches selected.</li>';
   $('#vv').innerHTML=`${esc(p.team)} passport holders: <b>${esc(V[p.team]||'check official site')}</b>`;
   $('#vb').innerHTML=cities.map(c=>`<a class="deal" rel="sponsored nofollow" href="#affiliate-hotels-${encodeURIComponent(c)}"><b>🏨 Hotels in ${esc(c)}</b><span>for ${p.mates||1} (affiliate placeholder)</span></a>`).join('')+`<a class="deal" rel="sponsored nofollow" href="#affiliate-flights-${encodeURIComponent(p.home||'home')}"><b>✈ Flights${p.home?' from '+esc(p.home):''}</b><span>(affiliate placeholder)</span></a>`;
@@ -86,7 +94,7 @@ async function share(p){
 f.onsubmit=async e=>{e.preventDefault(); const p={team:f.team.value,matches:[...f.querySelectorAll('#mlist input:checked')].map(i=>+i.value),arrive:f.arrive.value,depart:f.depart.value,home:f.home.value.trim(),name:f.name.value.trim(),mates:+f.mates.value||1};
   if(p.depart<p.arrive){alert('Departure must be after arrival');return;} render(p,false); await share(p); scrollTo(0,0); };
 (async()=>{const h=location.hash.slice(1); if(!h) return; const isEdit=h.startsWith('edit='); try{const p=await decodePlan(isEdit?h.slice(5):h); window.__plan=p;
-  if(isEdit){ f.team.value=p.team; ['name','home','mates','arrive','depart'].forEach(k=>f[k].value=p[k]??''); document.querySelectorAll('#mlist input').forEach(i=>i.checked=p.matches.includes(+i.value)); render(p,false); share(p); }
+  if(isEdit){ f.team.value=p.team; ['name','home','mates','arrive','depart'].forEach(k=>f[k].value=p[k]??''); badges(); document.querySelectorAll('#mlist input').forEach(i=>i.checked=p.matches.includes(+i.value)); render(p,false); share(p); }
   else { render(p,true); $('#imin').onclick=async()=>{const t=`I'm in for ${p.name||'the '+((ID[p.team]&&ID[p.team].n)||p.team)+' tour'}! 🏉🇦🇺`; try{await navigator.clipboard.writeText(t);}catch{} $('#toast').textContent='Reply copied. Paste it in your group chat!'; $('#toast').hidden=false;}; }
  }catch(err){ $('#toast').textContent='That plan link looks broken. Make a new one below.'; $('#toast').hidden=false; }})();
 </script>
