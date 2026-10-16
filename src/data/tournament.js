@@ -63,3 +63,42 @@ export function knockoutPaths(pool){
     return {r16:r, qf, sf, final:fin};
   })})).filter(p=>p.routes.length);
 }
+// ---- Finish options (shared by nation pages and planner; same labels, order, set) ----
+export function finishOptions(pool){
+  const L={1:`Top Pool ${pool} (likely)`,2:`2nd in Pool ${pool}`,3:`Best 3rd in Pool ${pool}`};
+  return [...knockoutPaths(pool).map(p=>({pos:p.pos,label:L[p.pos],paths:p.routes})),{pos:0,label:'Pool only',paths:[]}];
+}
+// ---- Opponent rule + guess. Guess = pools listed in draw-band order (band 1 first), i.e. seeding
+// from the World Rugby rankings used for the 2025 draw. A GUESS, not a prediction.
+import { identity as _id } from './identity.js';
+const nick = t => _id[t]?.nick || t;
+const slotsOf = m => m.title.split(': ')[1].split(' v ');
+const W_RE=/^(?:W|Winner) (.+)$/;
+function feeders(code){ const m=matches.find(z=>z.title.startsWith(code+':')); return slotsOf(m).flatMap(s=>{const w=s.match(W_RE); return w?feeders(w[1]):[s];}); }
+function fav(side){ // favourite of a bracket side: {rank, teams}
+  const w=side.match(W_RE);
+  if(!w){ const x=side.match(/^(\d)\w\w Pool ([A-F/]+)$/); const r=+x[1]; const ps=x[2].split('/');
+    return {rank:r, teams: r<3&&ps.length===1 ? [pools[ps[0]][r-1]] : []}; }
+  const m=matches.find(z=>z.title.startsWith(w[1]+':')); const [a,b]=slotsOf(m).map(fav);
+  return a.rank===b.rank ? {rank:a.rank, teams:[...a.teams,...b.teams]} : (a.rank<b.rank?a:b);
+}
+export function opponent(match, mySlot, self){
+  const ss=slotsOf(match);
+  const side = match.stage==='R16' ? ss.find(s=>s!==mySlot) : ss.find(s=>{const w=s.match(W_RE); return !feeders(w[1]).includes(mySlot);});
+  let ruleTxt;
+  if(match.stage==='R16') ruleTxt=`v ${side}`;
+  else { const w=side.match(W_RE); const f=feeders(w[1]); ruleTxt = f.length===2 ? `v winner of ${f.join(' v ')}` : f.length===4 ? `v winner of ${w[1]} (${f.slice(0,2).join(' v ')} / ${f.slice(2).join(' v ')} side)` : `v winner of ${w[1]}`; }
+  const g=fav(side); const teams=[...new Set(g.teams)].filter(t=>t!==self);
+  if(!teams.length || teams.length>3 || g.rank===3) return {rule:ruleTxt, guess:null};
+  return {rule:ruleTxt, guess:teams.map(nick).join(' or ')};
+}
+
+// Per-team knockout plan: options (same as buttons) with each match + opponent rule/guess
+export const KO_STAGES=[['R16','Round of 16'],['QF','Quarter-finals'],['SF','Semi-finals'],['Final','Final']];
+export function teamKnockouts(team){
+  const pool=teams.find(t=>t.name===team).pool;
+  return finishOptions(pool).map(o=>({pos:o.pos,label:o.label, items:o.paths.flatMap(r=>{
+    const slot=slotsOf(r.r16).find(x=>{const m=x.match(/Pool ([A-F/]+)$/); return m&&m[1].split('/').includes(pool)&&x.startsWith(['','1st','2nd','3rd'][o.pos]);});
+    return [r.r16,r.qf,r.sf,r.final].map(m=>({m, ...opponent(m,slot,team)}));
+  })}));
+}

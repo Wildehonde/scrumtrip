@@ -1,12 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { matches, teams, stageLabel, pools, knockoutPaths } from '../../data/tournament.js';
+import { matches, teams, stageLabel, pools, teamKnockouts } from '../../data/tournament.js';
 import { byTeam, visas } from '../../data/visa.js';
 import { T } from '../../data/tickets.js';
 import { identity } from '../../data/identity.js';
 const ID = Object.fromEntries(Object.entries(identity).map(([t,x])=>[t,{n:x.nick,a:x.accent}]));
-const M = matches.map(m=>({n:m.n,d:m.date,ko:m.ko,t:m.title,h:m.home,a:m.away,s:stageLabel(m.stage),v:m.venueName,c:m.cityName,la:m.lat,lo:m.lon,ck:m.city,u:m.utc}));
-const KP = Object.fromEntries(Object.keys(pools).map(pl=>[pl, knockoutPaths(pl).map(p=>({pos:p.pos,label:p.label,ns:[...new Set(p.routes.flatMap(r=>[r.r16.n,r.qf.n,r.sf.n,r.final.n]))]}))]));
+const M = matches.map(m=>({st:m.stage,n:m.n,d:m.date,ko:m.ko,t:m.title,h:m.home,a:m.away,s:stageLabel(m.stage),v:m.venueName,c:m.cityName,la:m.lat,lo:m.lon,ck:m.city,u:m.utc}));
+const KP = Object.fromEntries(teams.map(t=>[t.name, teamKnockouts(t.name).map(o=>({pos:o.pos,label:o.label,it:o.items.map(i=>({n:i.m.n,r:i.rule,g:i.guess}))}))]));
 const TP = Object.fromEntries(teams.map(t=>[t.name,t.pool]));
 const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.length? x.options.map(o=>visas[o].code).join(' or ') : (x.note||'')]));
 ---
@@ -20,7 +20,7 @@ const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.l
 <label>Number of mates<input name="mates" type="number" min="1" max="99" value="4"/></label>
 <label>Arrive<input name="arrive" type="date" min="2027-09-01" max="2027-11-30" value="2027-10-01"/></label>
 <label>Depart<input name="depart" type="date" min="2027-09-01" max="2027-11-30" value="2027-10-19"/></label>
-<fieldset><legend>Matches <button type="button" class="btn small ghost" id="mine">Select my team's</button></legend><p class="muted" id="kohint" hidden>Knockouts: <label><input type="radio" name="fin" value="1" checked/> if we top the pool (likely)</label> <label><input type="radio" name="fin" value="2"/> 2nd</label> <label><input type="radio" name="fin" value="3"/> best 3rd</label> <label><input type="radio" name="fin" value="0"/> pool only</label></p><div id="mlist" class="mlist"></div></fieldset>
+<fieldset><legend>Matches <button type="button" class="btn small ghost" id="mine">Select my team's</button></legend><div class="muted" id="kohint" hidden></div><div id="mlist" class="mlist"></div></fieldset>
 <button class="btn" type="submit">Build my plan</button>
 </form></div>
 <div id="view" hidden>
@@ -44,15 +44,16 @@ const V = Object.fromEntries(Object.entries(byTeam).map(([t,x])=>[t, x.options.l
 const $=s=>document.querySelector(s), f=$('#pf');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const day=d=>new Date(d+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
-$('#mlist').innerHTML=M.map(m=>`<label class="mi" data-teams="${esc((m.h||'')+'|'+(m.a||''))}"><input type="checkbox" value="${m.n}"/> <b>${day(m.d)}</b> ${esc(m.t)} <span class="muted">· ${esc(m.c)}</span> <span class="kob"></span></label>`).join('');
+const SG=[['Pool','Pool matches'],['R16','Knockouts: Round of 16'],['QF','Knockouts: Quarter-finals'],['SF','Knockouts: Semi-finals'],['Bronze','Knockouts: Bronze final'],['Final','Knockouts: Final']];
+$('#mlist').innerHTML=SG.map(([k,h])=>{const ms=M.filter(m=>(m.st.length===1?'Pool':m.st)===k); return `<h4 class="stagehead">${h}</h4>`+ms.map(m=>`<label class="mi" data-teams="${esc((m.h||'')+'|'+(m.a||''))}"><input type="checkbox" value="${m.n}"/> <b>${day(m.d)}</b> ${esc(m.t)} <span class="muted">· ${esc(m.c)}</span> <span class="kob"></span></label>`).join('');}).join('');
 function nickOf(t){return (ID[t]&&ID[t].n)||t;}
-function badges(){const t=f.team.value, pl=TP[t]; $('#kohint').hidden=!pl;
-  document.querySelectorAll('.mi').forEach(l=>{const n=+l.querySelector('input').value; const hits=pl?KP[pl].filter(p=>p.ns.includes(n)):[];
-    l.querySelector('.kob').innerHTML=hits.map(p=>`<span class="tag ko${p.pos==1?' likely':''}">${p.pos==1?'Likely if ':'If '}${esc(nickOf(t))} ${p.pos==1?'top':'finish '+p.label.split(' ')[0]} Pool ${pl}</span>`).join(' ');});}
-function koFor(t){const pl=TP[t]; const fin=+((f.querySelector('input[name=fin]:checked')||{}).value||0); const p=pl&&KP[pl].find(x=>x.pos===fin); return p?p.ns:[];}
-$('#mine').onclick=()=>{const t=f.team.value;document.querySelectorAll('.mi').forEach(l=>{const ts=l.dataset.teams.split('|');const ko=koFor(t); l.querySelector('input').checked=!!t&&(ts.includes(t)||ko.includes(+l.querySelector('input').value));});};
+const badgeTxt=(t,o,i)=>`${o.pos==1?'Likely if '+nickOf(t)+' '+o.label.replace(' (likely)','').replace(/^Top/,'top'):'If '+o.label}: ${i.r}${i.g?' · likely '+i.g+' (guess)':' · bracket rule only'}`;
+function badges(){const t=f.team.value, ops=KP[t]; $('#kohint').hidden=!ops;
+  if(ops){const cur=(f.querySelector('input[name=fin]:checked')||{}).value||'1'; $('#kohint').innerHTML='Knockouts: '+ops.map(o=>`<label><input type="radio" name="fin" value="${o.pos}"${o.pos==cur?' checked':''}/> ${esc(o.label)}</label>`).join(' ')+' <i>Opponent names are guesses from pool seeding.</i>'; f.querySelectorAll('input[name=fin]').forEach(r=>r.onchange=()=>$('#mine').click());}
+  document.querySelectorAll('.mi').forEach(l=>{const n=+l.querySelector('input').value; const hits=ops?ops.flatMap(o=>o.it.filter(i=>i.n===n).map(i=>({o,i}))):[];
+    l.querySelector('.kob').innerHTML=hits.map(({o,i})=>`<span class="tag ko${o.pos==1?' likely':''}">${esc(badgeTxt(t,o,i))}</span>`).join(' ');});}
+function koFor(t){const fin=+((f.querySelector('input[name=fin]:checked')||{}).value||0); const o=KP[t]&&KP[t].find(x=>x.pos===fin); return o?o.it.map(i=>i.n):[];}
 f.team.onchange=()=>{badges();$('#mine').click();};
-f.querySelectorAll('input[name=fin]').forEach(r=>r.onchange=()=>$('#mine').click());
 function render(p, shared){
   $('#builder').hidden=true; $('#view').hidden=false; $('#sharebar').hidden=shared; $('#sharedbar').hidden=!shared;
   const ms=M.filter(m=>p.matches.includes(m.n)).sort((a,b)=>a.u.localeCompare(b.u));
@@ -75,7 +76,7 @@ function render(p, shared){
     out.push(`<li><span class="d">${day(iso)}</span><span>${txt}</span></li>`);
   }
   $('#itin').innerHTML=out.join('');
-  $('#vm').innerHTML=ms.map(m=>`<li class="match"><div class="when"><b>${day(m.d)}</b><span>${m.ko} local</span></div><div class="what"><span class="tag">${esc(m.s)}</span>${(()=>{const pl=TP[p.team];const h=pl?KP[pl].find(x=>x.ns.includes(m.n)):null;return h?` <span class="tag ko${h.pos==1?' likely':''}">${h.pos==1?'Likely if '+esc(nickOf(p.team))+' top Pool '+pl:'If '+esc(nickOf(p.team))+' finish '+h.label}</span>`:'';})()}<h3>${esc(m.t)}</h3><p>${esc(m.v)}, <a href="/cities/${m.ck}/">${esc(m.c)}</a> · <a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${m.la}&mlon=${m.lo}#map=16/${m.la}/${m.lo}">📍 Stadium map</a> · <a href="/cities/${m.ck}/">🗺 City & Australia maps</a></p></div><a class="btn small" href="/ics/match-${m.n}.ics">+ Calendar</a></li>`).join('')||'<li class="muted">No matches selected.</li>';
+  $('#vm').innerHTML=ms.map((m,ix)=>{const g=SG.find(([k])=>k===(m.st.length===1?'Pool':m.st))[1]; const prev=ix?SG.find(([k])=>k===(ms[ix-1].st.length===1?'Pool':ms[ix-1].st))[1]:null; return (g!==prev?`<li class="stagehead"><h4>${g}</h4></li>`:'')+`<li class="match"><div class="when"><b>${day(m.d)}</b><span>${m.ko} local</span></div><div class="what"><span class="tag">${esc(m.s)}</span>${(()=>{const ops=KP[p.team]||[];return ops.flatMap(o=>o.it.filter(i=>i.n===m.n).map(i=>` <span class="tag ko${o.pos==1?' likely':''}">${esc(badgeTxt(p.team,o,i))}</span>`)).join('');})()}<h3>${esc(m.t)}</h3><p>${esc(m.v)}, <a href="/cities/${m.ck}/">${esc(m.c)}</a> · <a target="_blank" rel="noopener" href="https://www.openstreetmap.org/?mlat=${m.la}&mlon=${m.lo}#map=16/${m.la}/${m.lo}">📍 Stadium map</a> · <a href="/cities/${m.ck}/">🗺 City & Australia maps</a></p></div><a class="btn small" href="/ics/match-${m.n}.ics">+ Calendar</a></li>`;}).join('')||'<li class="muted">No matches selected.</li>';
   $('#vtix').innerHTML=ms.map(m=>`<li><span><b>${day(m.d)}</b> ${esc(m.t)} · ${esc(m.c)}</span><span class="acts"><a class="btn small tix" target="_blank" rel="noopener" href="${T.official}">Official tickets ↗</a><a class="btn small ghost" target="_blank" rel="noopener" href="${T.hospitality}">Hospitality ↗</a></span></li>`).join('')||'<li class="muted">No matches selected.</li>';
   $('#vv').innerHTML=`${esc(p.team)} passport holders: <b>${esc(V[p.team]||'check official site')}</b>`;
   $('#vb').innerHTML=cities.map(c=>`<a class="deal" rel="sponsored nofollow" href="#affiliate-hotels-${encodeURIComponent(c)}"><b>🏨 Hotels in ${esc(c)}</b><span>for ${p.mates||1} (affiliate placeholder)</span></a>`).join('')+`<a class="deal" rel="sponsored nofollow" href="#affiliate-flights-${encodeURIComponent(p.home||'home')}"><b>✈ Flights${p.home?' from '+esc(p.home):''}</b><span>(affiliate placeholder)</span></a>`;

@@ -54,3 +54,5 @@ h2{margin-top:40px}.muted{color:var(--mu)}
 .kosteps{margin:.4rem 0 .8rem 1.2rem}.kosteps li{margin:.2rem 0}
 .maps{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}.maps figure{margin:0}.map{height:280px;border-radius:10px;border:1px solid #ddd}.maps figcaption{font-size:.85rem;color:#666;margin-top:.3rem}
 @media(max-width:700px){.maps{grid-template-columns:1fr}}
+.stagehead{margin:1rem 0 .3rem;font-size:1rem;border-bottom:2px solid #e5e5e5;padding-bottom:.2rem;list-style:none}.mlist .stagehead:first-child{margin-top:0}
+.korows{list-style:none;padding:0}.korows li{padding:.5rem .7rem;border:1px solid #e5e5e5;border-radius:8px;margin:.4rem 0}.korows li.likely{background:#fffbea;border-color:#e0b100}.guess i{color:#888;font-weight:normal}
