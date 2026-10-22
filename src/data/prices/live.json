@@ -1,5 +1,5 @@
 {
- "fetchedAt": "2026-10-21T04:06:09.688Z",
+ "fetchedAt": "2026-10-22T04:02:57.410Z",
  "source": "Aviasales (Travelpayouts Data API)",
  "currency": "usd",
  "note": "Cheapest cached one-way fare. Indicative = no fares cached yet for Sep-Oct 2027, so the nearest available date is shown.",
@@ -20,9 +20,9 @@
    "indicative": true
   },
   "JNB-SYD": {
-   "price": 595,
-   "departure": "2026-12-04",
-   "airline": "EY",
+   "price": 532,
+   "departure": "2026-11-12",
+   "airline": "QR",
    "transfers": 1,
    "indicative": true
   },
@@ -44,15 +44,15 @@
   },
   "CPT-ADL": null,
   "CPT-MEL": {
-   "price": 748,
-   "departure": "2026-10-30",
+   "price": 724,
+   "departure": "2027-02-07",
    "airline": "QR",
    "transfers": 1,
    "indicative": true
   },
   "CPT-SYD": {
-   "price": 682,
-   "departure": "2026-10-29",
+   "price": 605,
+   "departure": "2026-11-23",
    "airline": "QR",
    "transfers": 1,
    "indicative": true
@@ -61,10 +61,10 @@
   "CPT-TSV": null,
   "CPT-NTL": null,
   "AKL-PER": {
-   "price": 396,
-   "departure": "2026-12-25",
-   "airline": "NZ",
-   "transfers": 0,
+   "price": 402,
+   "departure": "2027-01-10",
+   "airline": "QF",
+   "transfers": 1,
    "indicative": true
   },
   "AKL-ADL": {
@@ -82,14 +82,14 @@
    "indicative": false
   },
   "AKL-SYD": {
-   "price": 132,
+   "price": 133,
    "departure": "2026-12-06",
    "airline": "NZ",
    "transfers": 0,
    "indicative": true
   },
   "AKL-BNE": {
-   "price": 129,
+   "price": 131,
    "departure": "2026-11-21",
    "airline": "NZ",
    "transfers": 0,
@@ -107,10 +107,10 @@
    "indicative": true
   },
   "SCL-SYD": {
-   "price": 979,
-   "departure": "2026-12-01",
-   "airline": "QF",
-   "transfers": 0,
+   "price": 969,
+   "departure": "2026-11-27",
+   "airline": "QR",
+   "transfers": 2,
    "indicative": true
   },
   "SCL-BNE": {
@@ -182,20 +182,14 @@
    "indicative": true
   },
   "ROM-BNE": null,
-  "ROM-TSV": {
-   "price": 964,
-   "departure": "2026-10-22",
-   "airline": "EY",
-   "transfers": 3,
-   "indicative": true
-  },
+  "ROM-TSV": null,
   "ROM-NTL": null,
   "TBS-PER": null,
   "TBS-ADL": {
-   "price": 850,
-   "departure": "2026-10-22",
-   "airline": "XY",
-   "transfers": 3,
+   "price": 1000,
+   "departure": "2026-10-27",
+   "airline": "PC",
+   "transfers": 2,
    "indicative": true
   },
   "TBS-MEL": {
@@ -213,10 +207,10 @@
    "indicative": true
   },
   "TBS-BNE": {
-   "price": 732,
-   "departure": "2026-10-23",
-   "airline": "MU",
-   "transfers": 1,
+   "price": 858,
+   "departure": "2027-01-14",
+   "airline": "TK",
+   "transfers": 2,
    "indicative": true
   },
   "TBS-TSV": null,
@@ -243,16 +237,16 @@
   "BUE-PER": null,
   "BUE-ADL": null,
   "BUE-MEL": {
-   "price": 1409,
+   "price": 1447,
    "departure": "2026-10-25",
-   "airline": "CM",
-   "transfers": 4,
+   "airline": "H2",
+   "transfers": 3,
    "indicative": true
   },
   "BUE-SYD": {
-   "price": 1088,
-   "departure": "2026-12-01",
-   "airline": "AR",
+   "price": 1249,
+   "departure": "2026-11-04",
+   "airline": "LA",
    "transfers": 2,
    "indicative": true
   },
@@ -304,43 +298,49 @@
   "SUV-TSV": null,
   "SUV-NTL": null,
   "MAD-PER": {
-   "price": 652,
-   "departure": "2027-01-11",
-   "airline": "3U",
-   "transfers": 2,
+   "price": 489,
+   "departure": "2026-11-21",
+   "airline": "FR",
+   "transfers": 3,
    "indicative": true
   },
   "MAD-ADL": null,
   "MAD-MEL": {
-   "price": 498,
-   "departure": "2026-11-18",
-   "airline": "HU",
-   "transfers": 2,
-   "indicative": true
-  },
-  "MAD-SYD": {
-   "price": 431,
-   "departure": "2026-12-07",
+   "price": 458,
+   "departure": "2026-12-13",
    "airline": "3U",
    "transfers": 1,
    "indicative": true
   },
+  "MAD-SYD": {
+   "price": 551,
+   "departure": "2026-11-25",
+   "airline": "HU",
+   "transfers": 2,
+   "indicative": true
+  },
   "MAD-BNE": {
-   "price": 974,
-   "departure": "2026-10-26",
-   "airline": "W4",
-   "transfers": 3,
+   "price": 635,
+   "departure": "2026-12-04",
+   "airline": "MU",
+   "transfers": 1,
    "indicative": true
   },
   "MAD-TSV": null,
   "MAD-NTL": null,
-  "YTO-PER": null,
+  "YTO-PER": {
+   "price": 850,
+   "departure": "2026-11-05",
+   "airline": "PD",
+   "transfers": 3,
+   "indicative": true
+  },
   "YTO-ADL": null,
   "YTO-MEL": null,
   "YTO-SYD": {
-   "price": 641,
-   "departure": "2026-11-14",
-   "airline": "PD",
+   "price": 720,
+   "departure": "2026-10-30",
+   "airline": "WS",
    "transfers": 2,
    "indicative": true
   },
@@ -364,8 +364,8 @@
    "indicative": true
   },
   "DUB-BNE": {
-   "price": 774,
-   "departure": "2027-07-10",
+   "price": 775,
+   "departure": "2027-07-09",
    "airline": "TK",
    "transfers": 2,
    "indicative": true
@@ -389,10 +389,10 @@
   "MVD-ADL": null,
   "MVD-MEL": null,
   "MVD-SYD": {
-   "price": 980,
+   "price": 1337,
    "departure": "2026-11-17",
-   "airline": "AR",
-   "transfers": 2,
+   "airline": "JJ",
+   "transfers": 4,
    "indicative": true
   },
   "MVD-BNE": null,
@@ -438,9 +438,9 @@
    "indicative": true
   },
   "PAR-MEL": {
-   "price": 567,
-   "departure": "2026-11-20",
-   "airline": "FR",
+   "price": 595,
+   "departure": "2027-03-04",
+   "airline": "TO",
    "transfers": 3,
    "indicative": true
   },
@@ -452,28 +452,22 @@
    "indicative": false
   },
   "PAR-BNE": {
-   "price": 691,
-   "departure": "2026-10-28",
-   "airline": "MU",
-   "transfers": 2,
+   "price": 551,
+   "departure": "2026-12-06",
+   "airline": "FR",
+   "transfers": 3,
    "indicative": true
   },
   "PAR-TSV": null,
   "PAR-NTL": null,
   "TYO-PER": {
-   "price": 346,
-   "departure": "2026-10-22",
+   "price": 371,
+   "departure": "2026-10-23",
    "airline": "VJ",
    "transfers": 1,
    "indicative": true
   },
-  "TYO-ADL": {
-   "price": 554,
-   "departure": "2026-10-29",
-   "airline": "CZ",
-   "transfers": 2,
-   "indicative": true
-  },
+  "TYO-ADL": null,
   "TYO-MEL": {
    "price": 327,
    "departure": "2027-10-10",
@@ -489,9 +483,9 @@
    "indicative": true
   },
   "TYO-BNE": {
-   "price": 423,
-   "departure": "2026-10-22",
-   "airline": "VJ",
+   "price": 374,
+   "departure": "2027-03-09",
+   "airline": "CZ",
    "transfers": 1,
    "indicative": true
   },
@@ -548,23 +542,23 @@
   "APW-TSV": null,
   "APW-NTL": null,
   "LON-PER": {
-   "price": 548,
-   "departure": "2026-11-09",
-   "airline": "W9",
+   "price": 557,
+   "departure": "2026-11-16",
+   "airline": "CA",
    "transfers": 3,
    "indicative": true
   },
   "LON-ADL": {
-   "price": 599,
+   "price": 597,
    "departure": "2026-11-04",
    "airline": "CZ",
    "transfers": 2,
    "indicative": true
   },
   "LON-MEL": {
-   "price": 516,
+   "price": 542,
    "departure": "2026-10-30",
-   "airline": "CA",
+   "airline": "HU",
    "transfers": 1,
    "indicative": true
   },
