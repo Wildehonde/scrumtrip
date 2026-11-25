@@ -174,6 +174,11 @@
    "date": "2026-11-24",
    "price": 625,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 627,
+   "indicative": true
   }
  ],
  "JNB-MEL": [
@@ -369,6 +374,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 522,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 522,
    "indicative": true
   }
@@ -568,6 +578,11 @@
    "date": "2026-11-24",
    "price": 592,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 479,
+   "indicative": true
   }
  ],
  "CPT-PER": [
@@ -764,6 +779,11 @@
   {
    "date": "2026-11-24",
    "price": 704,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 553,
    "indicative": true
   }
  ],
@@ -962,6 +982,11 @@
    "date": "2026-11-24",
    "price": 648,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 636,
+   "indicative": true
   }
  ],
  "CPT-SYD": [
@@ -1159,6 +1184,11 @@
    "date": "2026-11-24",
    "price": 669,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 680,
+   "indicative": true
   }
  ],
  "AKL-PER": [
@@ -1351,6 +1381,11 @@
    "date": "2026-11-24",
    "price": 314,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 314,
+   "indicative": true
   }
  ],
  "AKL-ADL": [
@@ -1538,6 +1573,11 @@
    "date": "2026-11-24",
    "price": 297,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 242,
+   "indicative": true
   }
  ],
  "AKL-MEL": [
@@ -1733,6 +1773,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 239,
+   "indicative": false
+  },
+  {
+   "date": "2026-11-25",
    "price": 239,
    "indicative": false
   }
@@ -1932,6 +1977,11 @@
    "date": "2026-11-24",
    "price": 334,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 223,
+   "indicative": false
   }
  ],
  "AKL-BNE": [
@@ -2124,6 +2174,11 @@
    "date": "2026-11-24",
    "price": 133,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 131,
+   "indicative": true
   }
  ],
  "SCL-ADL": [
@@ -2139,6 +2194,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 1424,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 1424,
    "indicative": true
   }
@@ -2338,6 +2398,11 @@
    "date": "2026-11-24",
    "price": 995,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 1014,
+   "indicative": true
   }
  ],
  "SCL-SYD": [
@@ -2535,6 +2600,11 @@
    "date": "2026-11-24",
    "price": 944,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 944,
+   "indicative": false
   }
  ],
  "SCL-BNE": [
@@ -2620,6 +2690,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 1237,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 1237,
    "indicative": true
   }
@@ -2819,6 +2894,11 @@
    "date": "2026-11-24",
    "price": 206,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 211,
+   "indicative": true
   }
  ],
  "HKG-ADL": [
@@ -3014,6 +3094,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 561,
+   "indicative": false
+  },
+  {
+   "date": "2026-11-25",
    "price": 561,
    "indicative": false
   }
@@ -3213,6 +3298,11 @@
    "date": "2026-11-24",
    "price": 281,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 281,
+   "indicative": false
   }
  ],
  "HKG-SYD": [
@@ -3409,6 +3499,11 @@
   {
    "date": "2026-11-24",
    "price": 252,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 239,
    "indicative": true
   }
  ],
@@ -3607,6 +3702,11 @@
    "date": "2026-11-24",
    "price": 310,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 310,
+   "indicative": true
   }
  ],
  "ROM-PER": [
@@ -3793,6 +3893,11 @@
   {
    "date": "2026-11-24",
    "price": 486,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 759,
    "indicative": true
   }
  ],
@@ -3991,6 +4096,11 @@
    "date": "2026-11-24",
    "price": 551,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 557,
+   "indicative": true
   }
  ],
  "ROM-SYD": [
@@ -4188,6 +4298,11 @@
    "date": "2026-11-24",
    "price": 583,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 583,
+   "indicative": true
   }
  ],
  "ROM-BNE": [
@@ -4365,6 +4480,11 @@
    "date": "2026-11-24",
    "price": 553,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 674,
+   "indicative": true
   }
  ],
  "ROM-TSV": [
@@ -4537,6 +4657,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 505,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 505,
    "indicative": true
   }
@@ -4724,6 +4849,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 774,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 774,
    "indicative": true
   }
@@ -4923,6 +5053,11 @@
    "date": "2026-11-24",
    "price": 547,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 547,
+   "indicative": true
   }
  ],
  "TBS-SYD": [
@@ -5118,6 +5253,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 759,
+   "indicative": false
+  },
+  {
+   "date": "2026-11-25",
    "price": 759,
    "indicative": false
   }
@@ -5317,6 +5457,11 @@
    "date": "2026-11-24",
    "price": 659,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 659,
+   "indicative": true
   }
  ],
  "BUH-SYD": [
@@ -5482,6 +5627,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 705,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 705,
    "indicative": true
   }
@@ -5664,6 +5814,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 1279,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 1279,
    "indicative": true
   }
@@ -5863,6 +6018,11 @@
    "date": "2026-11-24",
    "price": 1074,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 1089,
+   "indicative": true
   }
  ],
  "NAN-PER": [
@@ -6058,6 +6218,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 502,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 502,
    "indicative": true
   }
@@ -6257,6 +6422,11 @@
    "date": "2026-11-24",
    "price": 240,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 240,
+   "indicative": true
   }
  ],
  "NAN-SYD": [
@@ -6454,6 +6624,11 @@
    "date": "2026-11-24",
    "price": 208,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 208,
+   "indicative": true
   }
  ],
  "NAN-BNE": [
@@ -6649,6 +6824,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 309,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 309,
    "indicative": true
   }
@@ -6882,6 +7062,11 @@
    "date": "2026-11-24",
    "price": 541,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 559,
+   "indicative": true
   }
  ],
  "MAD-SYD": [
@@ -7077,6 +7262,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 828,
+   "indicative": false
+  },
+  {
+   "date": "2026-11-25",
    "price": 828,
    "indicative": false
   }
@@ -7448,6 +7638,11 @@
    "date": "2026-11-24",
    "price": 620,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 620,
+   "indicative": true
   }
  ],
  "YTO-BNE": [
@@ -7595,6 +7790,11 @@
    "date": "2026-11-22",
    "price": 861,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 1004,
+   "indicative": true
   }
  ],
  "DUB-PER": [
@@ -7730,6 +7930,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 596,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 596,
    "indicative": true
   }
@@ -7917,6 +8122,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 715,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 715,
    "indicative": true
   }
@@ -8114,6 +8324,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 637,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 637,
    "indicative": true
   }
@@ -8465,6 +8680,11 @@
    "date": "2026-11-24",
    "price": 621,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 621,
+   "indicative": true
   }
  ],
  "MVD-SYD": [
@@ -8610,6 +8830,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 1185,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 1185,
    "indicative": true
   }
@@ -8811,6 +9036,11 @@
    "date": "2026-11-24",
    "price": 525,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 914,
+   "indicative": true
   }
  ],
  "LIS-MEL": [
@@ -8997,6 +9227,11 @@
   {
    "date": "2026-11-24",
    "price": 554,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 645,
    "indicative": true
   }
  ],
@@ -9193,6 +9428,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 530,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 530,
    "indicative": true
   }
@@ -9392,6 +9632,11 @@
    "date": "2026-11-24",
    "price": 450,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 450,
+   "indicative": true
   }
  ],
  "PAR-MEL": [
@@ -9589,6 +9834,11 @@
    "date": "2026-11-24",
    "price": 527,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 514,
+   "indicative": true
   }
  ],
  "PAR-SYD": [
@@ -9784,6 +10034,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 733,
+   "indicative": false
+  },
+  {
+   "date": "2026-11-25",
    "price": 733,
    "indicative": false
   }
@@ -9983,6 +10238,11 @@
    "date": "2026-11-24",
    "price": 528,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 528,
+   "indicative": true
   }
  ],
  "TYO-PER": [
@@ -10180,6 +10440,11 @@
    "date": "2026-11-24",
    "price": 275,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 275,
+   "indicative": true
   }
  ],
  "TYO-ADL": [
@@ -10325,6 +10590,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 464,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 464,
    "indicative": true
   }
@@ -10524,6 +10794,11 @@
    "date": "2026-11-24",
    "price": 263,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 265,
+   "indicative": true
   }
  ],
  "TYO-SYD": [
@@ -10719,6 +10994,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 284,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 284,
    "indicative": true
   }
@@ -10918,6 +11198,11 @@
    "date": "2026-11-24",
    "price": 377,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 377,
+   "indicative": false
   }
  ],
  "LAX-PER": [
@@ -11088,6 +11373,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 429,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 429,
    "indicative": true
   }
@@ -11434,6 +11724,11 @@
    "date": "2026-11-24",
    "price": 472,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 472,
+   "indicative": true
   }
  ],
  "LAX-SYD": [
@@ -11631,6 +11926,11 @@
    "date": "2026-11-24",
    "price": 437,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 496,
+   "indicative": true
   }
  ],
  "LAX-BNE": [
@@ -11806,6 +12106,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 498,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 498,
    "indicative": true
   }
@@ -11990,6 +12295,11 @@
    "date": "2026-11-24",
    "price": 281,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 270,
+   "indicative": true
   }
  ],
  "APW-SYD": [
@@ -12166,6 +12476,11 @@
   {
    "date": "2026-11-24",
    "price": 289,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 384,
    "indicative": true
   }
  ],
@@ -12362,6 +12677,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 558,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 558,
    "indicative": true
   }
@@ -12561,6 +12881,11 @@
    "date": "2026-11-24",
    "price": 454,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 454,
+   "indicative": true
   }
  ],
  "LON-SYD": [
@@ -12758,6 +13083,11 @@
    "date": "2026-11-24",
    "price": 911,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 483,
+   "indicative": true
   }
  ],
  "LON-BNE": [
@@ -12953,6 +13283,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 886,
+   "indicative": false
+  },
+  {
+   "date": "2026-11-25",
    "price": 886,
    "indicative": false
   }
@@ -13686,6 +14021,11 @@
    "date": "2026-11-24",
    "price": 661,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 661,
+   "indicative": true
   }
  ],
  "APW-BNE": [
@@ -13827,6 +14167,11 @@
   {
    "date": "2026-11-24",
    "price": 257,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 758,
    "indicative": true
   }
  ],
@@ -14004,6 +14349,11 @@
   {
    "date": "2026-11-24",
    "price": 686,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 730,
    "indicative": true
   }
  ],
@@ -14329,6 +14679,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 872,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 872,
    "indicative": true
   }
@@ -14766,6 +15121,11 @@
   },
   {
    "date": "2026-11-24",
+   "price": 642,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 642,
    "indicative": true
   }
@@ -15916,6 +16276,11 @@
    "date": "2026-11-24",
    "price": 1465,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 1465,
+   "indicative": true
   }
  ],
  "CWL-SYD": [
@@ -15990,6 +16355,11 @@
    "date": "2026-11-24",
    "price": 1047,
    "indicative": false
+  },
+  {
+   "date": "2026-11-25",
+   "price": 1047,
+   "indicative": false
   }
  ],
  "TBS-NTL": [
@@ -16007,11 +16377,21 @@
    "date": "2026-11-24",
    "price": 755,
    "indicative": true
+  },
+  {
+   "date": "2026-11-25",
+   "price": 755,
+   "indicative": true
   }
  ],
  "LON-TSV": [
   {
    "date": "2026-11-24",
+   "price": 669,
+   "indicative": true
+  },
+  {
+   "date": "2026-11-25",
    "price": 669,
    "indicative": true
   }
